@@ -76,9 +76,8 @@ function generateGlobalRulesForm {
     $System_Drawing_Size.Width = 444
     $dataGridView1.Size = $System_Drawing_Size
     $dataGridView1.TabIndex = 1
-    
     $form.Controls.Add($dataGridView1)
-    
+
     $title.DataBindings.DefaultDataSourceUpdateMode = 0
     $title.Font = New-Object System.Drawing.Font("Microsoft Sans Serif",12,0,3,1)
     

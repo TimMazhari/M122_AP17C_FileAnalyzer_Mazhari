@@ -1,3 +1,5 @@
+. .\json_utilities.ps1
+
 function generateConfigEditorForm() {
 
     param(
@@ -8,21 +10,21 @@ function generateConfigEditorForm() {
 [reflection.assembly]::loadwithpartialname("System.Windows.Forms") | Out-Null
 [reflection.assembly]::loadwithpartialname("System.Drawing") | Out-Null
 
-$form = New-Object System.Windows.Forms.Form
+$config_editor_form = New-Object System.Windows.Forms.Form
 $editButton = New-Object System.Windows.Forms.Button
 $AddFolderButton = New-Object System.Windows.Forms.Button
 $globalRulesButton = New-Object System.Windows.Forms.Button
 $title = New-Object System.Windows.Forms.Label
-$dataGridView1 = New-Object System.Windows.Forms.DataGridView
+$dataGridView = New-Object System.Windows.Forms.DataGridView
 
 $System_Drawing_Size = New-Object System.Drawing.Size
 $System_Drawing_Size.Height = 326
 $System_Drawing_Size.Width = 528
-$form.ClientSize = $System_Drawing_Size
-$form.DataBindings.DefaultDataSourceUpdateMode = 0
-$form.Name = "form"
-$form.Text = "Config Editor"
-$form.add_Load($handler_form_Load)
+$config_editor_form.ClientSize = $System_Drawing_Size
+$config_editor_form.DataBindings.DefaultDataSourceUpdateMode = 0
+$config_editor_form.Name = "config_editor_form"
+$config_editor_form.Text = "Config Editor"
+$config_editor_form.add_Load($handler_form_Load)
 
 $editButton.DataBindings.DefaultDataSourceUpdateMode = 0
 $editButton.Font = New-Object System.Drawing.Font("Microsoft Sans Serif",9.75,0,3,1)
@@ -40,7 +42,7 @@ $editButton.TabIndex = 4
 $editButton.Text = "Edit"
 $editButton.UseVisualStyleBackColor = $True
 
-$form.Controls.Add($editButton)
+$config_editor_form.Controls.Add($editButton)
 
 $AddFolderButton.DataBindings.DefaultDataSourceUpdateMode = 0
 $AddFolderButton.Font = New-Object System.Drawing.Font("Microsoft Sans Serif",9.75,0,3,1)
@@ -59,7 +61,7 @@ $AddFolderButton.Text = "Add folder"
 $AddFolderButton.UseVisualStyleBackColor = $True
 $AddFolderButton.add_Click( { $monitoredFoldersForm.ShowDialog() } )
 
-$form.Controls.Add($AddFolderButton)
+$config_editor_form.Controls.Add($AddFolderButton)
 
 $globalRulesButton.DataBindings.DefaultDataSourceUpdateMode = 0
 $globalRulesButton.Font = New-Object System.Drawing.Font("Microsoft Sans Serif",9.75,0,3,1)
@@ -78,7 +80,7 @@ $globalRulesButton.Text = "Global rules"
 $globalRulesButton.UseVisualStyleBackColor = $True
 $globalRulesButton.add_Click( { $globalRulesForm.ShowDialog() } )
 
-$form.Controls.Add($globalRulesButton)
+$config_editor_form.Controls.Add($globalRulesButton)
 
 $title.DataBindings.DefaultDataSourceUpdateMode = 0
 $title.Font = New-Object System.Drawing.Font("Microsoft Sans Serif",12,0,3,1)
@@ -95,39 +97,47 @@ $title.Size = $System_Drawing_Size
 $title.TabIndex = 1
 $title.Text = "Monitored folders"
 
-$form.Controls.Add($title)
+$config_editor_form.Controls.Add($title)
 
-$dataGridView1.AllowUserToAddRows = $False
-$dataGridView1.AllowUserToOrderColumns = $True
-$dataGridView1.AllowUserToResizeRows = $False
+$dataGridView.AllowUserToAddRows = $False
+$dataGridView.AllowUserToOrderColumns = $True
+$dataGridView.AllowUserToResizeRows = $False
 $System_Windows_Forms_DataGridViewTextBoxColumn_1 = New-Object System.Windows.Forms.DataGridViewTextBoxColumn
 $System_Windows_Forms_DataGridViewTextBoxColumn_1.HeaderText = "Name"
 $System_Windows_Forms_DataGridViewTextBoxColumn_1.Name = ""
 $System_Windows_Forms_DataGridViewTextBoxColumn_1.Width = 160
 
-$dataGridView1.Columns.Add($System_Windows_Forms_DataGridViewTextBoxColumn_1)|Out-Null
+$dataGridView.Columns.Add($System_Windows_Forms_DataGridViewTextBoxColumn_1)|Out-Null
 $System_Windows_Forms_DataGridViewTextBoxColumn_2 = New-Object System.Windows.Forms.DataGridViewTextBoxColumn
 $System_Windows_Forms_DataGridViewTextBoxColumn_2.HeaderText = "Path"
 $System_Windows_Forms_DataGridViewTextBoxColumn_2.Name = ""
 $System_Windows_Forms_DataGridViewTextBoxColumn_2.Width = 300
 
-$dataGridView1.Columns.Add($System_Windows_Forms_DataGridViewTextBoxColumn_2)|Out-Null
-$dataGridView1.DataBindings.DefaultDataSourceUpdateMode = 0
+$dataGridView.Columns.Add($System_Windows_Forms_DataGridViewTextBoxColumn_2)|Out-Null
+$dataGridView.DataBindings.DefaultDataSourceUpdateMode = 0
 $System_Drawing_Point = New-Object System.Drawing.Point
 $System_Drawing_Point.X = 12
 $System_Drawing_Point.Y = 59
-$dataGridView1.Location = $System_Drawing_Point
-$dataGridView1.Name = "dataGridView1"
+$dataGridView.Location = $System_Drawing_Point
+$dataGridView.Name = "dataGridView"
 $System_Drawing_Size = New-Object System.Drawing.Size
 $System_Drawing_Size.Height = 210
 $System_Drawing_Size.Width = 504
-$dataGridView1.Size = $System_Drawing_Size
-$dataGridView1.TabIndex = 0
+$dataGridView.Size = $System_Drawing_Size
+$dataGridView.TabIndex = 0
 
-$form.Controls.Add($dataGridView1)
 
-$form.add_Load($OnLoadForm_StateCorrection)
+[System.Collections.ArrayList] $jsonFolders = Convert-FromJson
+foreach($f in $jsonFolders){
+    [void]$dataGridView.Rows.Add($f.Name, $f.Path)
+}
 
-return $form
+$config_editor_form.Controls.Add($dataGridView)
+
+
+
+$config_editor_form.add_Load($OnLoadForm_StateCorrection)
+
+return $config_editor_form
 
 }

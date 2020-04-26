@@ -1,150 +1,187 @@
 . .\file_explorer_gui.ps1
+. .\json_utilities.ps1
+
 function generateMonitoredFoldersForm {
+
+    param(
+        [string] $name = "",
+        [string] $path = ""
+    )
 
     [reflection.assembly]::loadwithpartialname("System.Windows.Forms") | Out-Null
     [reflection.assembly]::loadwithpartialname("System.Drawing") | Out-Null
     
-    $form = New-Object System.Windows.Forms.Form
-    $button3 = New-Object System.Windows.Forms.Button
-    $button2 = New-Object System.Windows.Forms.Button
-    $button1 = New-Object System.Windows.Forms.Button
-    $global:textPathName = New-Object System.Windows.Forms.TextBox
-    $label2 = New-Object System.Windows.Forms.Label
-    $textBox1 = New-Object System.Windows.Forms.TextBox
-    $label1 = New-Object System.Windows.Forms.Label
+    $script:monitored_folders_form = New-Object System.Windows.Forms.Form
+    $cancelButton = New-Object System.Windows.Forms.Button
+    $saveButton = New-Object System.Windows.Forms.Button
+    $fileExplorerButton = New-Object System.Windows.Forms.Button
+    $script:textPathNameBox = New-Object System.Windows.Forms.TextBox
+    $pathLabel= New-Object System.Windows.Forms.Label
+    $script:textNameBox = New-Object System.Windows.Forms.TextBox
+    $nameLabel = New-Object System.Windows.Forms.Label
     
     $System_Drawing_Size = New-Object System.Drawing.Size
     $System_Drawing_Size.Height = 134
     $System_Drawing_Size.Width = 440
-    $form.ClientSize = $System_Drawing_Size
-    $form.DataBindings.DefaultDataSourceUpdateMode = 0
-    $form.Name = "form"
-    $form.Text = "Monitored folder"
+    $monitored_folders_form.ClientSize = $System_Drawing_Size
+    $monitored_folders_form.DataBindings.DefaultDataSourceUpdateMode = 0
+    $monitored_folders_form.Name = "monitored_folders_form"
+    $monitored_folders_form.Text = "Monitored folder"
     
-    $button3.DataBindings.DefaultDataSourceUpdateMode = 0
+    $cancelButton.DataBindings.DefaultDataSourceUpdateMode = 0
     
     $System_Drawing_Point = New-Object System.Drawing.Point
     $System_Drawing_Point.X = 268
     $System_Drawing_Point.Y = 99
-    $button3.Location = $System_Drawing_Point
-    $button3.Name = "button3"
+    $cancelButton.Location = $System_Drawing_Point
+    $cancelButton.Name = "cancelButton"
     $System_Drawing_Size = New-Object System.Drawing.Size
     $System_Drawing_Size.Height = 23
     $System_Drawing_Size.Width = 75
-    $button3.Size = $System_Drawing_Size
-    $button3.TabIndex = 6
-    $button3.Text = "Cancel"
-    $button3.UseVisualStyleBackColor = $True
+    $cancelButton.Size = $System_Drawing_Size
+    $cancelButton.TabIndex = 6
+    $cancelButton.Text = "Cancel"
+    $cancelButton.UseVisualStyleBackColor = $True
+    $cancelButton.add_Click({$monitored_folders_form.Close()
+                             Clear-TextBoxes})
     
-    $form.Controls.Add($button3)
+    $monitored_folders_form.Controls.Add($cancelButton)
     
-    $button2.DataBindings.DefaultDataSourceUpdateMode = 0
+    $saveButton.DataBindings.DefaultDataSourceUpdateMode = 0
     
     $System_Drawing_Point = New-Object System.Drawing.Point
     $System_Drawing_Point.X = 349
     $System_Drawing_Point.Y = 99
-    $button2.Location = $System_Drawing_Point
-    $button2.Name = "button2"
+    $saveButton.Location = $System_Drawing_Point
+    $saveButton.Name = "saveButton"
     $System_Drawing_Size = New-Object System.Drawing.Size
     $System_Drawing_Size.Height = 23
     $System_Drawing_Size.Width = 75
-    $button2.Size = $System_Drawing_Size
-    $button2.TabIndex = 5
-    $button2.Text = "Save"
-    $button2.UseVisualStyleBackColor = $True
+    $saveButton.Size = $System_Drawing_Size
+    $saveButton.TabIndex = 5
+    $saveButton.Text = "Save"
+    $saveButton.UseVisualStyleBackColor = $True
+    $saveButton.add_Click({
+        [System.Collections.ArrayList] $allFolders = @()
+        [System.Collections.ArrayList] $jsonFolders = Convert-FromJson
+        $script:isNew = $True
+        
+        foreach ($oldFolder in $jsonFolders){
+            IF ($oldFolder.Name -eq $name ) {
+                $isNew = $False
+                $oldFolder.Path = $textPathNameBox.Text
+            }
+            $allFolders.Add($oldFolder)
+        }
+
+        if ($isNew) {
+            $newFolder = Create-JsonFolderObject -name $textNameBox.Text -path $textPathNameBox.Text
+            $allFolders.Add($newFolder)
+        }
+
+        Save-AsJson( $allFolders )
+        Clear-TextBoxes
+        $monitored_folders_form.Close() 
+    })
+    $monitored_folders_form.Controls.Add($saveButton)
     
-    $form.Controls.Add($button2)
-    
-    $button1.DataBindings.DefaultDataSourceUpdateMode = 0
+    $fileExplorerButton.DataBindings.DefaultDataSourceUpdateMode = 0
     
     $System_Drawing_Point = New-Object System.Drawing.Point
     $System_Drawing_Point.X = 398
     $System_Drawing_Point.Y = 53
-    $button1.Location = $System_Drawing_Point
-    $button1.Name = "button1"
+    $fileExplorerButton.Location = $System_Drawing_Point
+    $fileExplorerButton.Name = "fileExplorerButton"
     $System_Drawing_Size = New-Object System.Drawing.Size
     $System_Drawing_Size.Height = 22
     $System_Drawing_Size.Width = 26
-    $button1.Size = $System_Drawing_Size
-    $button1.TabIndex = 4
-    $button1.Text = "..."
-    $button1.UseVisualStyleBackColor = $True
-    $button1.add_Click( {  $textPathName.Text = Select-FolderDialog } )
+    $fileExplorerButton.Size = $System_Drawing_Size
+    $fileExplorerButton.TabIndex = 4
+    $fileExplorerButton.Text = "..."
+    $fileExplorerButton.UseVisualStyleBackColor = $True
+    $fileExplorerButton.add_Click( {  $textPathNameBox.Text = Select-FolderDialog } )
     
 
 
-    $form.Controls.Add($button1)
+    $monitored_folders_form.Controls.Add($fileExplorerButton)
     
-    $textPathName.DataBindings.DefaultDataSourceUpdateMode = 0
+    $textPathNameBox.DataBindings.DefaultDataSourceUpdateMode = 0
     $System_Drawing_Point = New-Object System.Drawing.Point
     $System_Drawing_Point.X = 70
     $System_Drawing_Point.Y = 54
-    $textPathName.Location = $System_Drawing_Point
-    $textPathName.Name = "textPathName"
+    $textPathNameBox.Location = $System_Drawing_Point
+    $textPathNameBox.Name = "textPathNameBox"
     $System_Drawing_Size = New-Object System.Drawing.Size
     $System_Drawing_Size.Height = 20
     $System_Drawing_Size.Width = 328
-    $textPathName.Size = $System_Drawing_Size
-    $textPathName.TabIndex = 3
+    $textPathNameBox.Size = $System_Drawing_Size
+    $textPathNameBox.TabIndex = 3
+    $textPathNameBox.Text = $path
+
+    $monitored_folders_form.Controls.Add($textPathNameBox)
     
-    $form.Controls.Add($textPathName)
-    
-    $label2.DataBindings.DefaultDataSourceUpdateMode = 0
-    $label2.Font = New-Object System.Drawing.Font("Microsoft Sans Serif",9.75,0,3,1)
+    $pathLabel.DataBindings.DefaultDataSourceUpdateMode = 0
+    $pathLabel.Font = New-Object System.Drawing.Font("Microsoft Sans Serif",9.75,0,3,1)
     
     $System_Drawing_Point = New-Object System.Drawing.Point
     $System_Drawing_Point.X = 13
     $System_Drawing_Point.Y = 56
-    $label2.Location = $System_Drawing_Point
+    $pathLabel.Location = $System_Drawing_Point
     $System_Windows_Forms_Padding = New-Object System.Windows.Forms.Padding
     $System_Windows_Forms_Padding.Bottom = 0
     $System_Windows_Forms_Padding.Left = 3
     $System_Windows_Forms_Padding.Right = 3
     $System_Windows_Forms_Padding.Top = 2
-    $label2.Margin = $System_Windows_Forms_Padding
-    $label2.Name = "label2"
+    $pathLabel.Margin = $System_Windows_Forms_Padding
+    $pathLabel.Name = "pathLabel"
     $System_Drawing_Size = New-Object System.Drawing.Size
     $System_Drawing_Size.Height = 23
     $System_Drawing_Size.Width = 51
-    $label2.Size = $System_Drawing_Size
-    $label2.TabIndex = 2
-    $label2.Text = "Path:"
+    $pathLabel.Size = $System_Drawing_Size
+    $pathLabel.TabIndex = 2
+    $pathLabel.Text = "Path:"
     
-    $form.Controls.Add($label2)
+    $monitored_folders_form.Controls.Add($pathLabel)
     
-    $textBox1.DataBindings.DefaultDataSourceUpdateMode = 0
+    $textNameBox.DataBindings.DefaultDataSourceUpdateMode = 0
     $System_Drawing_Point = New-Object System.Drawing.Point
     $System_Drawing_Point.X = 70
     $System_Drawing_Point.Y = 12
-    $textBox1.Location = $System_Drawing_Point
-    $textBox1.Name = "textBox1"
+    $textNameBox.Location = $System_Drawing_Point
+    $textNameBox.Name = "textNameBox"
     $System_Drawing_Size = New-Object System.Drawing.Size
     $System_Drawing_Size.Height = 20
     $System_Drawing_Size.Width = 139
-    $textBox1.Size = $System_Drawing_Size
-    $textBox1.TabIndex = 1
+    $textNameBox.Size = $System_Drawing_Size
+    $textNameBox.TabIndex = 1
+    $textNameBox.Text = $name
     
-    $form.Controls.Add($textBox1)
+    $monitored_folders_form.Controls.Add($textNameBox)
     
-    $label1.DataBindings.DefaultDataSourceUpdateMode = 0
-    $label1.Font = New-Object System.Drawing.Font("Microsoft Sans Serif",9.75,0,3,1)
+    $nameLabel.DataBindings.DefaultDataSourceUpdateMode = 0
+    $nameLabel.Font = New-Object System.Drawing.Font("Microsoft Sans Serif",9.75,0,3,1)
     
     $System_Drawing_Point = New-Object System.Drawing.Point
     $System_Drawing_Point.X = 13
     $System_Drawing_Point.Y = 13
-    $label1.Location = $System_Drawing_Point
-    $label1.Name = "label1"
+    $nameLabel.Location = $System_Drawing_Point
+    $nameLabel.Name = "nameLabel"
     $System_Drawing_Size = New-Object System.Drawing.Size
     $System_Drawing_Size.Height = 23
     $System_Drawing_Size.Width = 51
-    $label1.Size = $System_Drawing_Size
-    $label1.TabIndex = 0
-    $label1.Text = "Name:"
+    $nameLabel.Size = $System_Drawing_Size
+    $nameLabel.TabIndex = 0
+    $nameLabel.Text = "Name:"
     
-    $form.Controls.Add($label1)
+    $monitored_folders_form.Controls.Add($nameLabel)
     
-    $form.add_Load($OnLoadForm_StateCorrection)
+    $monitored_folders_form.add_Load($OnLoadForm_StateCorrection)
     
-    return $form
+    return $monitored_folders_form
     
     }
+
+function Clear-TextBoxes {
+    $textNameBox.Text = ""
+    $textPathNameBox.Text = ""
+}
