@@ -81,6 +81,19 @@ function generateMonitoredFoldersForm {
             $newFolder = Create-JsonFolderObject -name $textNameBox.Text -path $textPathNameBox.Text
             $allFolders.Add($newFolder)
         }
+        
+        $allUniqueFolders = $allFolders  | Select-Object -Unique
+        $duplicateFolders = Compare-object –referenceobject $allUniqueFolders –differenceobject $allFolders
+        # TODO cant create new entry even if it is not a duplicate
+        IF ($duplicateFolders -ne $null){
+            Add-Type -AssemblyName PresentationCore,PresentationFramework
+            $ButtonType = [System.Windows.MessageBoxButton]::Ok
+            $MessageIcon = [System.Windows.MessageBoxImage]::Error
+            $MessageBody = "Duplicate error"
+            $MessageTitle = "No duplicate names are allowed"
+            [System.Windows.MessageBox]::Show($MessageBody, $MessageTitle, $ButtonType, $MessageIcon)
+            Return
+        }
 
         Save-AsJson( $allFolders )
         $monitored_folders_form.Close() 
