@@ -15,7 +15,7 @@ $editButton = New-Object System.Windows.Forms.Button
 $AddFolderButton = New-Object System.Windows.Forms.Button
 $globalRulesButton = New-Object System.Windows.Forms.Button
 $title = New-Object System.Windows.Forms.Label
-$dataGridView = New-Object System.Windows.Forms.DataGridView
+$script:dataGridView = New-Object System.Windows.Forms.DataGridView
 
 $System_Drawing_Size = New-Object System.Drawing.Size
 $System_Drawing_Size.Height = 326
@@ -41,6 +41,7 @@ $editButton.Size = $System_Drawing_Size
 $editButton.TabIndex = 4
 $editButton.Text = "Edit"
 $editButton.UseVisualStyleBackColor = $True
+$editButton.add_Click({$monitoredFoldersForm.ShowDialog()})
 
 $config_editor_form.Controls.Add($editButton)
 
@@ -126,11 +127,7 @@ $System_Drawing_Size.Width = 504
 $dataGridView.Size = $System_Drawing_Size
 $dataGridView.TabIndex = 0
 
-
-[System.Collections.ArrayList] $jsonFolders = Convert-FromJson
-foreach($f in $jsonFolders){
-    [void]$dataGridView.Rows.Add($f.Name, $f.Path)
-}
+Populate-Grid
 
 $config_editor_form.Controls.Add($dataGridView)
 
@@ -140,4 +137,12 @@ $config_editor_form.add_Load($OnLoadForm_StateCorrection)
 
 return $config_editor_form
 
+}
+
+function Populate-Grid{
+    $dataGridView.Rows.Clear()
+    [System.Collections.ArrayList] $jsonFolders = Convert-FromJson
+    foreach($f in $jsonFolders){
+        [void]$dataGridView.Rows.Add($f.Name, $f.Path)
+    }
 }

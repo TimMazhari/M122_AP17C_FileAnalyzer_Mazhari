@@ -1,11 +1,12 @@
 . .\file_explorer_gui.ps1
 . .\json_utilities.ps1
-
+. .\config_editor_gui.ps1
 function generateMonitoredFoldersForm {
 
     param(
         [string] $name = "",
-        [string] $path = ""
+        [string] $path = "",
+        $dataGridView = $null
     )
 
     [reflection.assembly]::loadwithpartialname("System.Windows.Forms") | Out-Null
@@ -81,6 +82,7 @@ function generateMonitoredFoldersForm {
 
         Save-AsJson( $allFolders )
         Clear-TextBoxes
+        Populate-Grid
         $monitored_folders_form.Close() 
     })
     $monitored_folders_form.Controls.Add($saveButton)
