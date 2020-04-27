@@ -69,8 +69,10 @@ function generateMonitoredFoldersForm {
         
         foreach ($oldFolder in $jsonFolders){
             IF ($oldFolder.Name -eq $name ) {
+                # if the name already exists we simply adjust the new values
                 $isNew = $False
                 $oldFolder.Path = $textPathNameBox.Text
+                $oldFolder.Name = $textNameBox.Text
             }
             $allFolders.Add($oldFolder)
         }
@@ -81,9 +83,10 @@ function generateMonitoredFoldersForm {
         }
 
         Save-AsJson( $allFolders )
-        Clear-TextBoxes
-        Populate-Grid
         $monitored_folders_form.Close() 
+        Populate-Grid
+
+        
     })
     $monitored_folders_form.Controls.Add($saveButton)
     
@@ -182,8 +185,3 @@ function generateMonitoredFoldersForm {
     return $monitored_folders_form
     
     }
-
-function Clear-TextBoxes {
-    $textNameBox.Text = ""
-    $textPathNameBox.Text = ""
-}

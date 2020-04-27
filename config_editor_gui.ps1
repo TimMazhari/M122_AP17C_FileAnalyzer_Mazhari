@@ -2,11 +2,6 @@
 
 function generateConfigEditorForm() {
 
-    param(
-        [System.Windows.Forms.Form] $globalRulesForm,
-        [System.Windows.Forms.Form] $monitoredFoldersForm
-    )
-
 [reflection.assembly]::loadwithpartialname("System.Windows.Forms") | Out-Null
 [reflection.assembly]::loadwithpartialname("System.Drawing") | Out-Null
 
@@ -41,7 +36,14 @@ $editButton.Size = $System_Drawing_Size
 $editButton.TabIndex = 4
 $editButton.Text = "Edit"
 $editButton.UseVisualStyleBackColor = $True
-$editButton.add_Click({$monitoredFoldersForm.ShowDialog()})
+$editButton.add_Click({ 
+                        $dataGridView.SelectedRows | ForEach-Object{
+                            $name = $_.Cells[0].Value
+                            $path = $_.Cells[1].Value
+                            $monitoredFoldersForm = generateMonitoredFoldersForm -name $name -path $path
+                            $monitoredFoldersForm.ShowDialog()
+                        }
+                        })
 
 $config_editor_form.Controls.Add($editButton)
 
@@ -60,7 +62,10 @@ $AddFolderButton.Size = $System_Drawing_Size
 $AddFolderButton.TabIndex = 3
 $AddFolderButton.Text = "Add folder"
 $AddFolderButton.UseVisualStyleBackColor = $True
-$AddFolderButton.add_Click( { $monitoredFoldersForm.ShowDialog() } )
+$AddFolderButton.add_Click( { 
+    # generate a new monitored folders form so there wont be complications when running after edit
+    $monitoredFoldersForm = generateMonitoredFoldersForm
+    $monitoredFoldersForm.ShowDialog() } )
 
 $config_editor_form.Controls.Add($AddFolderButton)
 
@@ -79,7 +84,9 @@ $globalRulesButton.Size = $System_Drawing_Size
 $globalRulesButton.TabIndex = 2
 $globalRulesButton.Text = "Global rules"
 $globalRulesButton.UseVisualStyleBackColor = $True
-$globalRulesButton.add_Click( { $globalRulesForm.ShowDialog() } )
+$globalRulesButton.add_Click( { 
+    $globalRulesForm = generateGlobalRulesForm
+    $globalRulesForm.ShowDialog() } )
 
 $config_editor_form.Controls.Add($globalRulesButton)
 
@@ -128,6 +135,12 @@ $dataGridView.Size = $System_Drawing_Size
 $dataGridView.TabIndex = 0
 
 Populate-Grid
+
+$dataGridView.Add_CellMouseDoubleClick({ 
+    $generateFolderConfigForm = generateFolderConfigForm
+    $generateFolderConfigForm.ShowDialog()
+ })
+
 
 $config_editor_form.Controls.Add($dataGridView)
 

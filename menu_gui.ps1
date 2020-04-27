@@ -1,8 +1,5 @@
 function generateMenuForm {
 
-    param(
-        [System.Windows.Forms.Form] $configEditorForm
-    )
 
 [reflection.assembly]::loadwithpartialname("System.Windows.Forms") | Out-Null
 [reflection.assembly]::loadwithpartialname("System.Drawing") | Out-Null
@@ -37,7 +34,9 @@ $configButton.Size = $System_Drawing_Size
 $configButton.TabIndex = 3
 $configButton.Text = "config"
 $configButton.UseVisualStyleBackColor = $True
-$configButton.add_Click( { $configEditorForm.ShowDialog() } )
+$configButton.add_Click( { 
+    $configEditorForm = generateConfigEditorForm
+    $configEditorForm.ShowDialog() } )
 
 $form.Controls.Add($configButton)
 

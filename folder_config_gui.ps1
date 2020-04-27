@@ -1,8 +1,5 @@
 function generateFolderConfigForm {
 
-    param (
-        [System.Windows.Forms.Form] $ruleConfigForm
-    )
 
 [reflection.assembly]::loadwithpartialname("System.Windows.Forms") | Out-Null
 [reflection.assembly]::loadwithpartialname("System.Drawing") | Out-Null
@@ -36,6 +33,10 @@ $addRuleButton.Size = $System_Drawing_Size
 $addRuleButton.TabIndex = 4
 $addRuleButton.Text = "Add rule"
 $addRuleButton.UseVisualStyleBackColor = $True
+$addRuleButton.add_Click({
+    $ruleConfigForm = generateRuleConfigForm
+    $ruleConfigForm.ShowDialog()
+})
 
 $form.Controls.Add($addRuleButton)
 
