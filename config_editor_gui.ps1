@@ -40,7 +40,7 @@ $editButton.add_Click({
                         $dataGridView.SelectedRows | ForEach-Object{
                             $name = $_.Cells[0].Value
                             $path = $_.Cells[1].Value
-                            $monitoredFoldersForm = generateMonitoredFoldersForm -name $name -path $path
+                            $monitoredFoldersForm = generateMonitoredFoldersForm -Name $name -Path $path
                             $monitoredFoldersForm.ShowDialog()
                         }
                         })
@@ -137,9 +137,11 @@ $dataGridView.TabIndex = 0
 Populate-Grid
 
 $dataGridView.Add_CellMouseDoubleClick({ 
-    $generateFolderConfigForm = generateFolderConfigForm
-    $generateFolderConfigForm.ShowDialog()
- })
+    $dataGridView.SelectedRows | ForEach-Object{
+        $name = $_.Cells[0].Value
+        $monitoredFoldersForm = generateFolderConfigForm -Name $name
+        $monitoredFoldersForm.ShowDialog()
+ }})
 
 
 $config_editor_form.Controls.Add($dataGridView)

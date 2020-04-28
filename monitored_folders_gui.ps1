@@ -76,21 +76,20 @@ function generateMonitoredFoldersForm {
             }
             $allFolders.Add($oldFolder)
         }
-
+        
         if ($isNew) {
             $newFolder = Create-JsonFolderObject -name $textNameBox.Text -path $textPathNameBox.Text
             $allFolders.Add($newFolder)
         }
         
-        $allUniqueFolders = $allFolders  | Select-Object -Unique
-        $duplicateFolders = Compare-object –referenceobject $allUniqueFolders –differenceobject $allFolders
-        # TODO cant create new entry even if it is not a duplicate
-        IF ($duplicateFolders -ne $null){
+        $allUniqueFolders = $allFolders  | Select-Object -Property Name -Unique
+        $duplicateFolders = Compare-Object -ReferenceObject $allUniqueFolders -DifferenceObject $allFolders
+        IF ($null -ne $duplicateFolders){
             Add-Type -AssemblyName PresentationCore,PresentationFramework
             $ButtonType = [System.Windows.MessageBoxButton]::Ok
             $MessageIcon = [System.Windows.MessageBoxImage]::Error
             $MessageBody = "Duplicate error"
-            $MessageTitle = "No duplicate names are allowed"
+            $MessageTitle = "No duplicate names are allowed, please enter a different name"
             [System.Windows.MessageBox]::Show($MessageBody, $MessageTitle, $ButtonType, $MessageIcon)
             Return
         }
