@@ -138,9 +138,10 @@ Populate-FolderGrid
 
 $dataGridView.Add_CellMouseDoubleClick({ 
     $dataGridView.SelectedRows | ForEach-Object{
+        
         $name = $_.Cells[0].Value
-        $monitoredFoldersForm = Generate-FolderConfigForm -Name $name
-        $monitoredFoldersForm.ShowDialog()
+        $folderConfigForm = Generate-FolderConfigForm -Name $name
+        $folderConfigForm.ShowDialog()
  }})
 
 

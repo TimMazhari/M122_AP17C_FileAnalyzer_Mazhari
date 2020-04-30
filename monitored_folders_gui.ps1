@@ -44,8 +44,7 @@ function Generate-MonitoredFoldersForm {
     $cancelButton.TabIndex = 6
     $cancelButton.Text = "Cancel"
     $cancelButton.UseVisualStyleBackColor = $True
-    $cancelButton.add_Click({$monitored_folders_form.Close()
-                             Clear-TextBoxes})
+    $cancelButton.add_Click({$monitored_folders_form.Close()})
     
     $monitored_folders_form.Controls.Add($cancelButton)
     
@@ -90,8 +89,8 @@ function Generate-MonitoredFoldersForm {
             Return
         }
         Save-AsJson( $allFolders )
-        $monitored_folders_form.Close() 
         Populate-FolderGrid
+        $monitored_folders_form.Close() 
         
     })
     $monitored_folders_form.Controls.Add($saveButton)

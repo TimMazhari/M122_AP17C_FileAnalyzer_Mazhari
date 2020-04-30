@@ -1,4 +1,5 @@
 . .\json_utilities.ps1
+. .\config_editor_gui.ps1
 function Generate-FolderConfigForm {
 
     param(
@@ -12,6 +13,7 @@ $folderConfigForm = New-Object System.Windows.Forms.Form
 $addRuleButton = New-Object System.Windows.Forms.Button
 $fileTypesLabel = New-Object System.Windows.Forms.Label
 $script:dataGridView = New-Object System.Windows.Forms.DataGridView
+$backButton = New-Object System.Windows.Forms.Button
 $title = New-Object System.Windows.Forms.Label
 
 $System_Drawing_Size = New-Object System.Drawing.Size
@@ -43,6 +45,29 @@ $addRuleButton.add_Click({
 })
 
 $folderConfigForm.Controls.Add($addRuleButton)
+
+
+$backButton.DataBindings.DefaultDataSourceUpdateMode = 0
+    
+$System_Drawing_Point = New-Object System.Drawing.Point
+$System_Drawing_Point.X = 12
+$System_Drawing_Point.Y = 355
+$backButton.Location = $System_Drawing_Point
+$backButton.Name = "backButton"
+$System_Drawing_Size = New-Object System.Drawing.Size
+$System_Drawing_Size.Height = 23
+$System_Drawing_Size.Width = 75
+$backButton.Size = $System_Drawing_Size
+$backButton.TabIndex = 5
+$backButton.Text = "Back"
+$backButton.UseVisualStyleBackColor = $True
+$backButton.add_Click({
+    $folderConfigForm.Close() 
+})
+
+$folderConfigForm.Controls.Add($backButton)
+
+
 
 $fileTypesLabel.DataBindings.DefaultDataSourceUpdateMode = 0
 $fileTypesLabel.Font = New-Object System.Drawing.Font("Microsoft Sans Serif",9.75,1,3,1)
