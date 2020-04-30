@@ -1,4 +1,4 @@
-function generateGlobalRulesForm {
+function Generate-GlobalRulesForm {
 
     [reflection.assembly]::loadwithpartialname("System.Windows.Forms") | Out-Null
     [reflection.assembly]::loadwithpartialname("System.Drawing") | Out-Null

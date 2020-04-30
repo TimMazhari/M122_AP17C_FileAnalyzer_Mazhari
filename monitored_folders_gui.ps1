@@ -2,7 +2,7 @@
 . .\json_utilities.ps1
 . .\config_editor_gui.ps1
 . .\general_utilities.ps1
-function generateMonitoredFoldersForm {
+function Generate-MonitoredFoldersForm {
 
     param(
         [string] $name = "",

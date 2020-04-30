@@ -1,5 +1,5 @@
 . .\json_utilities.ps1
-function generateFolderConfigForm {
+function Generate-FolderConfigForm {
 
     param(
         [string] $name
@@ -38,7 +38,7 @@ $addRuleButton.TabIndex = 4
 $addRuleButton.Text = "Add rule"
 $addRuleButton.UseVisualStyleBackColor = $True
 $addRuleButton.add_Click({
-    $ruleConfigForm = generateRuleConfigForm -Name $name
+    $ruleConfigForm = Generate-RuleConfigForm -Name $name
     $ruleConfigForm.ShowDialog()
 })
 
@@ -92,7 +92,7 @@ $dataGridView.Add_CellMouseDoubleClick({
     $dataGridView.SelectedRows | ForEach-Object{
         $filetype = $_.Cells[0].Value
         $destination = $_.Cells[1].Value
-        $monitoredFoldersForm = generateRuleConfigForm -Name $name -Filetype $filetype -Destination $destination
+        $monitoredFoldersForm = Generate-RuleConfigForm -Name $name -Filetype $filetype -Destination $destination
         $monitoredFoldersForm.ShowDialog()
  }})
 

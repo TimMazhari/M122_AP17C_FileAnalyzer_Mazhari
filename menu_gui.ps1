@@ -1,4 +1,4 @@
-function generateMenuForm {
+function Generate-MenuForm {
 
 
 [reflection.assembly]::loadwithpartialname("System.Windows.Forms") | Out-Null
@@ -35,7 +35,7 @@ $configButton.TabIndex = 3
 $configButton.Text = "config"
 $configButton.UseVisualStyleBackColor = $True
 $configButton.add_Click( { 
-    $configEditorForm = generateConfigEditorForm
+    $configEditorForm = Generate-ConfigEditorForm
     $configEditorForm.ShowDialog() } )
 
 $form.Controls.Add($configButton)

@@ -2,7 +2,7 @@
 . .\file_explorer_gui.ps1
 . .\folder_config_gui.ps1
 . .\general_utilities.ps1
-function generateRuleConfigForm {
+function Generate-RuleConfigForm {
 
     param(
         [string] $name,

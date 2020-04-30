@@ -1,6 +1,6 @@
 . .\json_utilities.ps1
 
-function generateConfigEditorForm() {
+function Generate-ConfigEditorForm() {
 
 [reflection.assembly]::loadwithpartialname("System.Windows.Forms") | Out-Null
 [reflection.assembly]::loadwithpartialname("System.Drawing") | Out-Null
@@ -40,7 +40,7 @@ $editButton.add_Click({
                         $dataGridView.SelectedRows | ForEach-Object{
                             $name = $_.Cells[0].Value
                             $path = $_.Cells[1].Value
-                            $monitoredFoldersForm = generateMonitoredFoldersForm -Name $name -Path $path
+                            $monitoredFoldersForm = Generate-MonitoredFoldersForm -Name $name -Path $path
                             $monitoredFoldersForm.ShowDialog()
                         }
                         })
@@ -64,7 +64,7 @@ $AddFolderButton.Text = "Add folder"
 $AddFolderButton.UseVisualStyleBackColor = $True
 $AddFolderButton.add_Click( { 
     # generate a new monitored folders form so there wont be complications when running after edit
-    $monitoredFoldersForm = generateMonitoredFoldersForm
+    $monitoredFoldersForm = Generate-MonitoredFoldersForm
     $monitoredFoldersForm.ShowDialog() } )
 
 $config_editor_form.Controls.Add($AddFolderButton)
@@ -85,7 +85,7 @@ $globalRulesButton.TabIndex = 2
 $globalRulesButton.Text = "Global rules"
 $globalRulesButton.UseVisualStyleBackColor = $True
 $globalRulesButton.add_Click( { 
-    $globalRulesForm = generateGlobalRulesForm
+    $globalRulesForm = Generate-GlobalRulesForm
     $globalRulesForm.ShowDialog() } )
 
 $config_editor_form.Controls.Add($globalRulesButton)
@@ -139,7 +139,7 @@ Populate-FolderGrid
 $dataGridView.Add_CellMouseDoubleClick({ 
     $dataGridView.SelectedRows | ForEach-Object{
         $name = $_.Cells[0].Value
-        $monitoredFoldersForm = generateFolderConfigForm -Name $name
+        $monitoredFoldersForm = Generate-FolderConfigForm -Name $name
         $monitoredFoldersForm.ShowDialog()
  }})
 

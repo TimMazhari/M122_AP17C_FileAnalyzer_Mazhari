@@ -43,5 +43,17 @@
         "Rules":  [
 
                   ]
+    },
+    {
+        "Name":  "test",
+        "Path":  "C:\\Users\\Bim Bababi\\OneDrive\\Bilder\\Screenshots",
+        "Rules":  [
+                      {
+                          "Filetype":  "e",
+                          "Minsize":  0,
+                          "Maxsize":  0,
+                          "Destination":  "e"
+                      }
+                  ]
     }
 ]
