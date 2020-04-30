@@ -1,32 +1,47 @@
 [
     {
-        "Name":  "Test",
-        "Path":  "C:\\Users\\Bim Bababi\\Desktop\\config\\TEst",
+        "Name":  "e",
+        "Path":  "e",
         "Rules":  [
                       {
-                          "Filetype":  ".pdf",
-                          "Minsize":  1,
-                          "Maxsize":  22,
-                          "Destination":  "test"
-                      },
-                      {
-                          "Filetype":  "1",
+                          "Filetype":  "e",
                           "Minsize":  0,
                           "Maxsize":  0,
-                          "Destination":  "C:\\Users\\Bim Bababi\\Desktop\\config"
+                          "Destination":  "e"
+                      },
+                      {
+                          "Filetype":  "f",
+                          "Minsize":  0,
+                          "Maxsize":  0,
+                          "Destination":  "f"
+                      },
+                      {
+                          "Filetype":  "ee",
+                          "Minsize":  0,
+                          "Maxsize":  0,
+                          "Destination":  "f"
                       }
                   ]
     },
     {
-        "Name":  "11",
-        "Path":  "11",
+        "Name":  "eee",
+        "Path":  "e",
         "Rules":  [
-                      {
-                          "Filetype":  "44",
-                          "Minsize":  0,
-                          "Maxsize":  0,
-                          "Destination":  "44"
-                      }
+
+                  ]
+    },
+    {
+        "Name":  "ef",
+        "Path":  "fe",
+        "Rules":  [
+
+                  ]
+    },
+    {
+        "Name":  "fff",
+        "Path":  "",
+        "Rules":  [
+
                   ]
     }
 ]

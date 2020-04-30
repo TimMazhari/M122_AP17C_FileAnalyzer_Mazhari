@@ -134,7 +134,7 @@ $System_Drawing_Size.Width = 504
 $dataGridView.Size = $System_Drawing_Size
 $dataGridView.TabIndex = 0
 
-Populate-Grid
+Populate-FolderGrid
 
 $dataGridView.Add_CellMouseDoubleClick({ 
     $dataGridView.SelectedRows | ForEach-Object{
@@ -154,7 +154,7 @@ return $config_editor_form
 
 }
 
-function Populate-Grid{
+function Populate-FolderGrid{
     $dataGridView.Rows.Clear()
     [System.Collections.ArrayList] $jsonFolders = Convert-FromJson
     foreach($f in $jsonFolders){

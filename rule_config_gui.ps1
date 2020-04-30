@@ -1,9 +1,13 @@
 . .\json_utilities.ps1
 . .\file_explorer_gui.ps1
+. .\folder_config_gui.ps1
+. .\general_utilities.ps1
 function generateRuleConfigForm {
 
     param(
-        [string] $name
+        [string] $name,
+        [string] $filetype = "",
+        [string] $destination = ""
     )
 
     [reflection.assembly]::loadwithpartialname("System.Drawing") | Out-Null
@@ -142,7 +146,8 @@ function generateRuleConfigForm {
     $destinationTextBox.Size = $System_Drawing_Size
     $destinationTextBox.TabIndex = 5
     $ruleConfigForm.Controls.Add($destinationTextBox)
-    
+    $destinationTextBox.Text = $destination
+
     $destinationLabel.DataBindings.DefaultDataSourceUpdateMode = 0
     $destinationLabel.Font = New-Object System.Drawing.Font("Microsoft Sans Serif",9.75,0,3,1)
     
@@ -172,7 +177,8 @@ function generateRuleConfigForm {
     $typeTextBox.Size = $System_Drawing_Size
     $typeTextBox.TabIndex = 3
     $ruleConfigForm.Controls.Add($typeTextBox)
-    
+    $typeTextBox.Text = $filetype
+
     $typeLabel.DataBindings.DefaultDataSourceUpdateMode = 0
     $typeLabel.Font = New-Object System.Drawing.Font("Microsoft Sans Serif",9.75,0,3,1)
     
@@ -224,17 +230,37 @@ function generateRuleConfigForm {
     $saveButton.add_Click({
         [System.Collections.ArrayList]$jsonFolders = Convert-FromJson
         [System.Collections.ArrayList]$allFolders = @()
+        $script:isNew = $True
+
         foreach($folder in $jsonFolders){
             if($folder.Name -eq $name){
-                $rule = Create-FolderTypesObject -fileType $typeTextBox.Text -minsize $minSizeNumericUpDown.Text -maxsize $maxSizeNumericUpDown.Text -destination $destinationTextBox.Text
-                $folder.Rules += $rule
-                $allFolders.Add($folder)
-            } ELSE{
-                $allFolders.Add($folder)
-            }
-        }
+                if($folder.Rules.Count -gt 0){
+                    foreach($rule in $folder.Rules){
+                        if($rule.Filetype -eq $filetype){
+                            $isNew = $False
+                            $rule.Destination = $destinationTextBox.Text
+                        }                    
+                    }
+                }
+                if($isNew){
+                    $rule = Create-FolderTypesObject -fileType $typeTextBox.Text -minsize $minSizeNumericUpDown.Text -maxsize $maxSizeNumericUpDown.Text -destination $destinationTextBox.Text
+                    $folder.Rules += $rule
+                }
 
+                $allUniqueRules = $folder.Rules  | Select-Object -Property Filetype -Unique
+                $duplicateRules = Compare-Object -ReferenceObject $allUniqueRules -DifferenceObject $folder.Rules
+                if($null -ne $duplicateRules){
+                    Write-DuplicateError
+                    Return
+                }
+
+                
+            }
+            $allFolders.Add($folder)
+        }
+        
         Save-AsJson( $allFolders )
+        Populate-RuleGrid
         $ruleConfigForm.Close()
 
     })

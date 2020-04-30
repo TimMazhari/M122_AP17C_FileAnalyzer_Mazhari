@@ -1,6 +1,7 @@
 . .\file_explorer_gui.ps1
 . .\json_utilities.ps1
 . .\config_editor_gui.ps1
+. .\general_utilities.ps1
 function generateMonitoredFoldersForm {
 
     param(
@@ -81,23 +82,16 @@ function generateMonitoredFoldersForm {
             $newFolder = Create-JsonFolderObject -name $textNameBox.Text -path $textPathNameBox.Text
             $allFolders.Add($newFolder)
         }
-        
+
         $allUniqueFolders = $allFolders  | Select-Object -Property Name -Unique
         $duplicateFolders = Compare-Object -ReferenceObject $allUniqueFolders -DifferenceObject $allFolders
-        IF ($null -ne $duplicateFolders){
-            Add-Type -AssemblyName PresentationCore,PresentationFramework
-            $ButtonType = [System.Windows.MessageBoxButton]::Ok
-            $MessageIcon = [System.Windows.MessageBoxImage]::Error
-            $MessageBody = "Duplicate error"
-            $MessageTitle = "No duplicate names are allowed, please enter a different name"
-            [System.Windows.MessageBox]::Show($MessageBody, $MessageTitle, $ButtonType, $MessageIcon)
+        if($null -ne $duplicateFolders){
+            Write-DuplicateError
             Return
         }
-
         Save-AsJson( $allFolders )
         $monitored_folders_form.Close() 
-        Populate-Grid
-
+        Populate-FolderGrid
         
     })
     $monitored_folders_form.Controls.Add($saveButton)

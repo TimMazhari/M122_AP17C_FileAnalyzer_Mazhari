@@ -11,7 +11,7 @@ function generateFolderConfigForm {
 $folderConfigForm = New-Object System.Windows.Forms.Form
 $addRuleButton = New-Object System.Windows.Forms.Button
 $fileTypesLabel = New-Object System.Windows.Forms.Label
-$dataGridView = New-Object System.Windows.Forms.DataGridView
+$script:dataGridView = New-Object System.Windows.Forms.DataGridView
 $title = New-Object System.Windows.Forms.Label
 
 $System_Drawing_Size = New-Object System.Drawing.Size
@@ -86,6 +86,16 @@ $System_Drawing_Size.Width = 444
 $dataGridView.Size = $System_Drawing_Size
 $dataGridView.TabIndex = 1
 
+Populate-RuleGrid
+
+$dataGridView.Add_CellMouseDoubleClick({ 
+    $dataGridView.SelectedRows | ForEach-Object{
+        $filetype = $_.Cells[0].Value
+        $destination = $_.Cells[1].Value
+        $monitoredFoldersForm = generateRuleConfigForm -Name $name -Filetype $filetype -Destination $destination
+        $monitoredFoldersForm.ShowDialog()
+ }})
+
 $folderConfigForm.Controls.Add($dataGridView)
 
 $title.DataBindings.DefaultDataSourceUpdateMode = 0
@@ -109,4 +119,16 @@ $folderConfigForm.add_Load($OnLoadForm_StateCorrection)
 
 return $folderConfigForm
 
+}
+
+function Populate-RuleGrid{
+    $dataGridView.Rows.Clear()
+    [System.Collections.ArrayList] $jsonFolders = Convert-FromJson
+    foreach($folder in $jsonFolders){
+        if($folder.Name -eq $name){
+            foreach($rule in $folder.Rules){
+                [void]$dataGridView.Rows.Add($rule.Filetype, $rule.Destination)
+            }
+        }
+    }
 }
