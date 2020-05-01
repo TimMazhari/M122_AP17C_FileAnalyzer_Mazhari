@@ -1,58 +1,25 @@
 [
     {
-        "Name":  "e",
-        "Path":  "e",
+        "Name":  "Folder 1",
+        "Path":  "C:\\Users\\Bim Bababi\\Desktop\\Website Mockup",
         "Rules":  [
                       {
-                          "Filetype":  "e",
+                          "Filetype":  ".pdf",
                           "Minsize":  0,
                           "Maxsize":  0,
-                          "Destination":  "e"
-                      },
-                      {
-                          "Filetype":  "f",
-                          "Minsize":  0,
-                          "Maxsize":  0,
-                          "Destination":  "f"
-                      },
-                      {
-                          "Filetype":  "ee",
-                          "Minsize":  0,
-                          "Maxsize":  0,
-                          "Destination":  "f"
+                          "Destination":  "C:\\Users\\Bim Bababi\\Desktop\\Website Mockup"
                       }
                   ]
     },
     {
-        "Name":  "eee",
-        "Path":  "e",
-        "Rules":  [
-
-                  ]
-    },
-    {
-        "Name":  "ef",
-        "Path":  "fe",
-        "Rules":  [
-
-                  ]
-    },
-    {
-        "Name":  "fff",
-        "Path":  "",
-        "Rules":  [
-
-                  ]
-    },
-    {
-        "Name":  "test",
-        "Path":  "C:\\Users\\Bim Bababi\\OneDrive\\Bilder\\Screenshots",
+        "Name":  "Folder 2",
+        "Path":  "C:\\Users\\Bim Bababi\\Desktop\\config\\TEst",
         "Rules":  [
                       {
-                          "Filetype":  "e",
+                          "Filetype":  "Test",
                           "Minsize":  0,
                           "Maxsize":  0,
-                          "Destination":  "e"
+                          "Destination":  "C:\\Users\\Bim Bababi\\Pictures\\Camera Roll\\The Giver\\Page 1\\page9_data\\e08\\d1a"
                       }
                   ]
     }

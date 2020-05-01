@@ -10,7 +10,7 @@ $editButton = New-Object System.Windows.Forms.Button
 $AddFolderButton = New-Object System.Windows.Forms.Button
 $globalRulesButton = New-Object System.Windows.Forms.Button
 $title = New-Object System.Windows.Forms.Label
-$script:dataGridView = New-Object System.Windows.Forms.DataGridView
+$script:folderDataGridView = New-Object System.Windows.Forms.DataGridView
 
 $System_Drawing_Size = New-Object System.Drawing.Size
 $System_Drawing_Size.Height = 326
@@ -37,7 +37,7 @@ $editButton.TabIndex = 4
 $editButton.Text = "Edit"
 $editButton.UseVisualStyleBackColor = $True
 $editButton.add_Click({ 
-                        $dataGridView.SelectedRows | ForEach-Object{
+                        $folderDataGridView.SelectedRows | ForEach-Object{
                             $name = $_.Cells[0].Value
                             $path = $_.Cells[1].Value
                             $monitoredFoldersForm = Generate-MonitoredFoldersForm -Name $name -Path $path
@@ -107,45 +107,44 @@ $title.Text = "Monitored folders"
 
 $config_editor_form.Controls.Add($title)
 
-$dataGridView.AllowUserToAddRows = $False
-$dataGridView.AllowUserToOrderColumns = $True
-$dataGridView.AllowUserToResizeRows = $False
+$folderDataGridView.AllowUserToAddRows = $False
+$folderDataGridView.AllowUserToOrderColumns = $True
+$folderDataGridView.AllowUserToResizeRows = $False
 $System_Windows_Forms_DataGridViewTextBoxColumn_1 = New-Object System.Windows.Forms.DataGridViewTextBoxColumn
 $System_Windows_Forms_DataGridViewTextBoxColumn_1.HeaderText = "Name"
 $System_Windows_Forms_DataGridViewTextBoxColumn_1.Name = ""
 $System_Windows_Forms_DataGridViewTextBoxColumn_1.Width = 160
 
-$dataGridView.Columns.Add($System_Windows_Forms_DataGridViewTextBoxColumn_1)|Out-Null
+$folderDataGridView.Columns.Add($System_Windows_Forms_DataGridViewTextBoxColumn_1)|Out-Null
 $System_Windows_Forms_DataGridViewTextBoxColumn_2 = New-Object System.Windows.Forms.DataGridViewTextBoxColumn
 $System_Windows_Forms_DataGridViewTextBoxColumn_2.HeaderText = "Path"
 $System_Windows_Forms_DataGridViewTextBoxColumn_2.Name = ""
 $System_Windows_Forms_DataGridViewTextBoxColumn_2.Width = 300
 
-$dataGridView.Columns.Add($System_Windows_Forms_DataGridViewTextBoxColumn_2)|Out-Null
-$dataGridView.DataBindings.DefaultDataSourceUpdateMode = 0
+$folderDataGridView.Columns.Add($System_Windows_Forms_DataGridViewTextBoxColumn_2)|Out-Null
+$folderDataGridView.DataBindings.DefaultDataSourceUpdateMode = 0
 $System_Drawing_Point = New-Object System.Drawing.Point
 $System_Drawing_Point.X = 12
 $System_Drawing_Point.Y = 59
-$dataGridView.Location = $System_Drawing_Point
-$dataGridView.Name = "dataGridView"
+$folderDataGridView.Location = $System_Drawing_Point
+$folderDataGridView.Name = "folderDataGridView"
 $System_Drawing_Size = New-Object System.Drawing.Size
 $System_Drawing_Size.Height = 210
 $System_Drawing_Size.Width = 504
-$dataGridView.Size = $System_Drawing_Size
-$dataGridView.TabIndex = 0
+$folderDataGridView.Size = $System_Drawing_Size
+$folderDataGridView.TabIndex = 0
 
 Populate-FolderGrid
 
-$dataGridView.Add_CellMouseDoubleClick({ 
-    $dataGridView.SelectedRows | ForEach-Object{
+$folderDataGridView.Add_CellMouseDoubleClick({ 
+    $folderDataGridView.SelectedRows | ForEach-Object{
         
         $name = $_.Cells[0].Value
         $folderConfigForm = Generate-FolderConfigForm -Name $name
         $folderConfigForm.ShowDialog()
  }})
 
-
-$config_editor_form.Controls.Add($dataGridView)
+$config_editor_form.Controls.Add($folderDataGridView)
 
 
 
@@ -156,9 +155,9 @@ return $config_editor_form
 }
 
 function Populate-FolderGrid{
-    $dataGridView.Rows.Clear()
+    $folderDataGridView.Rows.Clear()
     [System.Collections.ArrayList] $jsonFolders = Convert-FromJson
     foreach($f in $jsonFolders){
-        [void]$dataGridView.Rows.Add($f.Name, $f.Path)
+        [void]$folderDataGridView.Rows.Add($f.Name, $f.Path)
     }
 }

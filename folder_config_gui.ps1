@@ -1,5 +1,6 @@
 . .\json_utilities.ps1
 . .\config_editor_gui.ps1
+
 function Generate-FolderConfigForm {
 
     param(
@@ -9,10 +10,10 @@ function Generate-FolderConfigForm {
 [reflection.assembly]::loadwithpartialname("System.Windows.Forms") | Out-Null
 [reflection.assembly]::loadwithpartialname("System.Drawing") | Out-Null
 
-$folderConfigForm = New-Object System.Windows.Forms.Form
+$script:folderConfigForm = New-Object System.Windows.Forms.Form
 $addRuleButton = New-Object System.Windows.Forms.Button
 $fileTypesLabel = New-Object System.Windows.Forms.Label
-$script:dataGridView = New-Object System.Windows.Forms.DataGridView
+$script:ruleDataGridView = New-Object System.Windows.Forms.DataGridView
 $backButton = New-Object System.Windows.Forms.Button
 $title = New-Object System.Windows.Forms.Label
 
@@ -62,7 +63,8 @@ $backButton.TabIndex = 5
 $backButton.Text = "Back"
 $backButton.UseVisualStyleBackColor = $True
 $backButton.add_Click({
-    $folderConfigForm.Close() 
+    
+    $folderConfigForm.Close()
 })
 
 $folderConfigForm.Controls.Add($backButton)
@@ -86,42 +88,42 @@ $fileTypesLabel.Text = "File types"
 
 $folderConfigForm.Controls.Add($fileTypesLabel)
 
-$dataGridView.AllowUserToAddRows = $False
+$ruleDataGridView.AllowUserToAddRows = $False
 $System_Windows_Forms_DataGridViewTextBoxColumn_1 = New-Object System.Windows.Forms.DataGridViewTextBoxColumn
 $System_Windows_Forms_DataGridViewTextBoxColumn_1.HeaderText = "File type"
 $System_Windows_Forms_DataGridViewTextBoxColumn_1.Name = ""
 $System_Windows_Forms_DataGridViewTextBoxColumn_1.Width = 100
 
-$dataGridView.Columns.Add($System_Windows_Forms_DataGridViewTextBoxColumn_1)|Out-Null
+$ruleDataGridView.Columns.Add($System_Windows_Forms_DataGridViewTextBoxColumn_1)|Out-Null
 $System_Windows_Forms_DataGridViewTextBoxColumn_2 = New-Object System.Windows.Forms.DataGridViewTextBoxColumn
 $System_Windows_Forms_DataGridViewTextBoxColumn_2.HeaderText = "Folder path"
 $System_Windows_Forms_DataGridViewTextBoxColumn_2.Name = ""
 $System_Windows_Forms_DataGridViewTextBoxColumn_2.Width = 300
 
-$dataGridView.Columns.Add($System_Windows_Forms_DataGridViewTextBoxColumn_2)|Out-Null
-$dataGridView.DataBindings.DefaultDataSourceUpdateMode = 0
+$ruleDataGridView.Columns.Add($System_Windows_Forms_DataGridViewTextBoxColumn_2)|Out-Null
+$ruleDataGridView.DataBindings.DefaultDataSourceUpdateMode = 0
 $System_Drawing_Point = New-Object System.Drawing.Point
 $System_Drawing_Point.X = 12
 $System_Drawing_Point.Y = 71
-$dataGridView.Location = $System_Drawing_Point
-$dataGridView.Name = "data$dataGridView"
+$ruleDataGridView.Location = $System_Drawing_Point
+$ruleDataGridView.Name = "data$ruleDataGridView"
 $System_Drawing_Size = New-Object System.Drawing.Size
 $System_Drawing_Size.Height = 269
 $System_Drawing_Size.Width = 444
-$dataGridView.Size = $System_Drawing_Size
-$dataGridView.TabIndex = 1
+$ruleDataGridView.Size = $System_Drawing_Size
+$ruleDataGridView.TabIndex = 1
 
 Populate-RuleGrid
 
-$dataGridView.Add_CellMouseDoubleClick({ 
-    $dataGridView.SelectedRows | ForEach-Object{
+$ruleDataGridView.Add_CellMouseDoubleClick({ 
+    $ruleDataGridView.SelectedRows | ForEach-Object{
         $filetype = $_.Cells[0].Value
         $destination = $_.Cells[1].Value
         $monitoredFoldersForm = Generate-RuleConfigForm -Name $name -Filetype $filetype -Destination $destination
         $monitoredFoldersForm.ShowDialog()
  }})
 
-$folderConfigForm.Controls.Add($dataGridView)
+$folderConfigForm.Controls.Add($ruleDataGridView)
 
 $title.DataBindings.DefaultDataSourceUpdateMode = 0
 $title.Font = New-Object System.Drawing.Font("Microsoft Sans Serif",12,0,3,1)
@@ -147,12 +149,12 @@ return $folderConfigForm
 }
 
 function Populate-RuleGrid{
-    $dataGridView.Rows.Clear()
+    $ruleDataGridView.Rows.Clear()
     [System.Collections.ArrayList] $jsonFolders = Convert-FromJson
     foreach($folder in $jsonFolders){
         if($folder.Name -eq $name){
             foreach($rule in $folder.Rules){
-                [void]$dataGridView.Rows.Add($rule.Filetype, $rule.Destination)
+                [void]$ruleDataGridView.Rows.Add($rule.Filetype, $rule.Destination)
             }
         }
     }
