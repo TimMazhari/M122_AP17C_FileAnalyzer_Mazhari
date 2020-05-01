@@ -1,26 +1,9 @@
 [
     {
         "Name":  "Folder 1",
-        "Path":  "C:\\Users\\Bim Bababi\\Desktop\\Website Mockup",
+        "Path":  "Path 1",
         "Rules":  [
-                      {
-                          "Filetype":  ".pdf",
-                          "Minsize":  0,
-                          "Maxsize":  0,
-                          "Destination":  "C:\\Users\\Bim Bababi\\Desktop\\Website Mockup"
-                      }
-                  ]
-    },
-    {
-        "Name":  "Folder 2",
-        "Path":  "C:\\Users\\Bim Bababi\\Desktop\\config\\TEst",
-        "Rules":  [
-                      {
-                          "Filetype":  "Test",
-                          "Minsize":  0,
-                          "Maxsize":  0,
-                          "Destination":  "C:\\Users\\Bim Bababi\\Pictures\\Camera Roll\\The Giver\\Page 1\\page9_data\\e08\\d1a"
-                      }
+
                   ]
     }
 ]

@@ -1,13 +1,14 @@
-. .\json_utilities.ps1
+. .\utilities\json_utilities.ps1
 . .\file_explorer_gui.ps1
 . .\folder_config_gui.ps1
-. .\general_utilities.ps1
+. .\utilities\general_utilities.ps1
 function Generate-RuleConfigForm {
 
     param(
         [string] $name,
         [string] $filetype = "",
-        [string] $destination = ""
+        [string] $destination = "",
+        [bool] $isNewEntry = $true
     )
 
     [reflection.assembly]::loadwithpartialname("System.Drawing") | Out-Null
@@ -50,8 +51,35 @@ function Generate-RuleConfigForm {
     $deleteButton.TabIndex = 11
     $deleteButton.Text = "Delete"
     $deleteButton.UseVisualStyleBackColor = $True
+
+    $deleteButton.add_Click({
+        [System.Collections.ArrayList]$jsonFolders = Convert-FromJson
+        [System.Collections.ArrayList]$allFolders = @()
+        $script:isNew = $True
+        foreach($folder in $jsonFolders){
+            if($folder.Name -eq $name){
+                if($folder.Rules.Count -gt 0){
+                    foreach($rule in $folder.Rules){
+                        if($rule.Filetype -eq $filetype){
+                            $folder.Rules = $folder.Rules -ne $rule
+                        }                    
+                    }
+                }                
+            }
+            $allFolders.Add($folder)
+        }
+        
+        Save-AsJson( $allFolders )
+        Populate-RuleGrid
+        $ruleConfigForm.Close()
+
+    })
     
     $ruleConfigForm.Controls.Add($deleteButton)
+    
+    if($isNewEntry){
+        $deleteButton.Visible = $false
+    }
     
     $maxSizeNumericUpDown.DataBindings.DefaultDataSourceUpdateMode = 0
     $System_Drawing_Point = New-Object System.Drawing.Point
@@ -210,6 +238,7 @@ function Generate-RuleConfigForm {
     $cancelButton.TabIndex = 1
     $cancelButton.Text = "Cancel"
     $cancelButton.UseVisualStyleBackColor = $True
+    $cancelButton.add_Click({$ruleConfigForm.Close()})
     
     $ruleConfigForm.Controls.Add($cancelButton)
     

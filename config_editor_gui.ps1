@@ -1,4 +1,4 @@
-. .\json_utilities.ps1
+. .\utilities\json_utilities.ps1
 
 function Generate-ConfigEditorForm() {
 
@@ -40,7 +40,7 @@ $editButton.add_Click({
                         $folderDataGridView.SelectedRows | ForEach-Object{
                             $name = $_.Cells[0].Value
                             $path = $_.Cells[1].Value
-                            $monitoredFoldersForm = Generate-MonitoredFoldersForm -Name $name -Path $path
+                            $monitoredFoldersForm = Generate-MonitoredFoldersForm -Name $name -Path $path -IsNewFolder $false
                             $monitoredFoldersForm.ShowDialog()
                         }
                         })

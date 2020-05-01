@@ -1,13 +1,13 @@
 . .\file_explorer_gui.ps1
-. .\json_utilities.ps1
+. .\utilities\json_utilities.ps1
 . .\config_editor_gui.ps1
-. .\general_utilities.ps1
+. .\utilities\general_utilities.ps1
 function Generate-MonitoredFoldersForm {
 
     param(
         [string] $name = "",
         [string] $path = "",
-        $dataGridView = $null
+        [bool] $isNewFolder = $true
     )
 
     [reflection.assembly]::loadwithpartialname("System.Windows.Forms") | Out-Null
@@ -21,7 +21,8 @@ function Generate-MonitoredFoldersForm {
     $pathLabel= New-Object System.Windows.Forms.Label
     $script:textNameBox = New-Object System.Windows.Forms.TextBox
     $nameLabel = New-Object System.Windows.Forms.Label
-    
+    $script:deleteButton = New-Object System.Windows.Forms.Button
+
     $System_Drawing_Size = New-Object System.Drawing.Size
     $System_Drawing_Size.Height = 134
     $System_Drawing_Size.Width = 440
@@ -152,6 +153,41 @@ function Generate-MonitoredFoldersForm {
     $pathLabel.Text = "Path:"
     
     $monitored_folders_form.Controls.Add($pathLabel)
+    
+    $deleteButton.DataBindings.DefaultDataSourceUpdateMode = 0
+    
+    $System_Drawing_Point = New-Object System.Drawing.Point
+    $System_Drawing_Point.X = 13
+    $System_Drawing_Point.Y = 99
+    $deleteButton.Location = $System_Drawing_Point
+    $deleteButton.Name = "deleteButton"
+    $System_Drawing_Size = New-Object System.Drawing.Size
+    $System_Drawing_Size.Height = 23
+    $System_Drawing_Size.Width = 75
+    $deleteButton.Size = $System_Drawing_Size
+    $deleteButton.TabIndex = 7
+    $deleteButton.Text = "Delete"
+    $deleteButton.UseVisualStyleBackColor = $True
+    $deleteButton.add_Click({
+
+        [System.Collections.ArrayList] $allFolders = @()
+        [System.Collections.ArrayList] $jsonFolders = Convert-FromJson
+        
+        foreach ($oldFolder in $jsonFolders){
+            IF ($oldFolder.Name -ne $name ) {
+                $allFolders.Add($oldFolder)
+            }
+        }
+        
+        Save-AsJson( $allFolders )
+        Populate-FolderGrid
+        $monitored_folders_form.Close() 
+    })
+    
+    $monitored_folders_form.Controls.Add($deleteButton)
+    if($isNewFolder){
+        $deleteButton.Visible = $false
+    }
     
     $textNameBox.DataBindings.DefaultDataSourceUpdateMode = 0
     $System_Drawing_Point = New-Object System.Drawing.Point
