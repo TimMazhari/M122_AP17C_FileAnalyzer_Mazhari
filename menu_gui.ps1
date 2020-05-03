@@ -6,7 +6,7 @@ function Generate-MenuForm {
 
 $form = New-Object System.Windows.Forms.Form
 $configButton = New-Object System.Windows.Forms.Button
-$stopButton = New-Object System.Windows.Forms.Button
+$startButton = New-Object System.Windows.Forms.Button
 $status = New-Object System.Windows.Forms.Label
 $statusLabel = New-Object System.Windows.Forms.Label
 
@@ -40,23 +40,29 @@ $configButton.add_Click( {
 
 $form.Controls.Add($configButton)
 
-$stopButton.DataBindings.DefaultDataSourceUpdateMode = 0
+$startButton.DataBindings.DefaultDataSourceUpdateMode = 0
 
 $System_Drawing_Point = New-Object System.Drawing.Point
 $System_Drawing_Point.X = 26
 $System_Drawing_Point.Y = 73
-$stopButton.Location = $System_Drawing_Point
-$stopButton.Name = "stopButton"
+$startButton.Location = $System_Drawing_Point
+$startButton.Name = "startButton"
 $System_Drawing_Size = New-Object System.Drawing.Size
 $System_Drawing_Size.Height = 23
 $System_Drawing_Size.Width = 75
-$stopButton.Size = $System_Drawing_Size
-$stopButton.TabIndex = 2
-$stopButton.Text = "Stop"
-$stopButton.UseVisualStyleBackColor = $True
+$startButton.Size = $System_Drawing_Size
+$startButton.TabIndex = 2
+$startButton.Text = "Stop"
+$startButton.UseVisualStyleBackColor = $True
 
+$startButton.add_Click({
+    Import-Module 'c:\Users\Bim Bababi\.vscode\extensions\ironmansoftware.powershellprotools-5.10.0\out\PowerShellProTools.VSCode.psd1' -ArgumentList @($false)
+    Merge-Script -Verbose -ConfigFile "C:\sources\school\modul122\m122_AP17C_FileAnalyzer_Mazhari\package.psd1"
+    New-Service -Name "PoshServ" -BinaryPathName C:\sources\school\modul122\M122_AP17C_FileAnalyzer_Mazhari\ServiceStuff\Test.exe
 
-$form.Controls.Add($stopButton)
+    Get-Service PoshServ | Start-Service
+})
+$form.Controls.Add($startButton)
 
 $status.DataBindings.DefaultDataSourceUpdateMode = 0
 $status.Font = New-Object System.Drawing.Font("Microsoft Sans Serif",11.25,0,3,1)

@@ -1,6 +1,6 @@
 @{
     Root = "C:\sources\school\modul122\M122_AP17C_FileAnalyzer_Mazhari\Test.ps1"
-    OutputPath = "C:\Users\Bim Bababi\Desktop\Neuer Ordner"
+    OutputPath = "C:\sources\school\modul122\M122_AP17C_FileAnalyzer_Mazhari\ServiceStuff"
     Package = @{
         Enabled = $true
         Obfuscate = $false

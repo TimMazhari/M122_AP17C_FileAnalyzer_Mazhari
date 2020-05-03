@@ -1,7 +1,14 @@
 [
     {
-        "Name":  "Folder 1",
-        "Path":  "Path 1",
+        "Name":  "123",
+        "Path":  "21",
+        "Rules":  [
+
+                  ]
+    },
+    {
+        "Name":  "333",
+        "Path":  "",
         "Rules":  [
 
                   ]
