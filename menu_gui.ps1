@@ -1,3 +1,4 @@
+
 function Generate-MenuForm {
 
 
@@ -69,11 +70,17 @@ if($null -ne $service){
 $startButton.UseVisualStyleBackColor = $True
 
 $startButton.add_Click({
-    
     if($startButton.Text -eq "Start"){
-        Import-Module 'c:\Users\Bim Bababi\.vscode\extensions\ironmansoftware.powershellprotools-5.10.0\out\PowerShellProTools.VSCode.psd1' -ArgumentList @($false)
-        Merge-Script -Verbose -ConfigFile "C:\sources\school\modul122\m122_AP17C_FileAnalyzer_Mazhari\package.psd1"
-        New-Service -Name "FolderSorter" -BinaryPathName C:\sources\school\modul122\M122_AP17C_FileAnalyzer_Mazhari\ServiceStuff\Hallo.exe
+
+        $relativePathModule = Resolve-Path ..\..\..\..\Users\$env:UserName\.vscode\extensions\ironmansoftware.powershellprotools-5.10.0\out\PowerShellProTools.VSCode.psd1
+        Import-Module $relativePathModule -ArgumentList @($false)
+
+
+        $relativePathConfigFile = Resolve-Path .\package.psd1
+        Merge-Script -Verbose -ConfigFile $relativePathConfigFile
+        
+        $relativePathExe = Resolve-Path .\ServiceStuff\Hallo.exe
+        New-Service -Name "FolderSorter" -BinaryPathName $relativePathExe
 
         Get-Service FolderSorter | Start-Service
     }else{
