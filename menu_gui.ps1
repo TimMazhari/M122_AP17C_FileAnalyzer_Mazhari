@@ -6,8 +6,8 @@ function Generate-MenuForm {
 
 $form = New-Object System.Windows.Forms.Form
 $configButton = New-Object System.Windows.Forms.Button
-$startButton = New-Object System.Windows.Forms.Button
-$status = New-Object System.Windows.Forms.Label
+$script:startButton = New-Object System.Windows.Forms.Button
+$script:status = New-Object System.Windows.Forms.Label
 $statusLabel = New-Object System.Windows.Forms.Label
 
 
@@ -52,21 +52,49 @@ $System_Drawing_Size.Height = 23
 $System_Drawing_Size.Width = 75
 $startButton.Size = $System_Drawing_Size
 $startButton.TabIndex = 2
-$startButton.Text = "Stop"
+
+$service = Get-Service -Name FolderSorter -ErrorAction SilentlyContinue
+
+if($null -ne $service){
+    $status.ForeColor = [System.Drawing.Color]::Green
+    $status.Text = "running"
+    $startButton.Text = "Stop"
+
+} else{
+    $status.ForeColor = [System.Drawing.Color]::Red
+    $status.Text = "not running"
+    $startButton.Text = "Start"
+}
+
 $startButton.UseVisualStyleBackColor = $True
 
 $startButton.add_Click({
-    Import-Module 'c:\Users\Bim Bababi\.vscode\extensions\ironmansoftware.powershellprotools-5.10.0\out\PowerShellProTools.VSCode.psd1' -ArgumentList @($false)
-    Merge-Script -Verbose -ConfigFile "C:\sources\school\modul122\m122_AP17C_FileAnalyzer_Mazhari\package.psd1"
-    New-Service -Name "PoshServ" -BinaryPathName C:\sources\school\modul122\M122_AP17C_FileAnalyzer_Mazhari\ServiceStuff\Test.exe
+    
+    if($startButton.Text -eq "Start"){
+        Import-Module 'c:\Users\Bim Bababi\.vscode\extensions\ironmansoftware.powershellprotools-5.10.0\out\PowerShellProTools.VSCode.psd1' -ArgumentList @($false)
+        Merge-Script -Verbose -ConfigFile "C:\sources\school\modul122\m122_AP17C_FileAnalyzer_Mazhari\package.psd1"
+        New-Service -Name "FolderSorter" -BinaryPathName C:\sources\school\modul122\M122_AP17C_FileAnalyzer_Mazhari\ServiceStuff\Hallo.exe
 
-    Get-Service PoshServ | Start-Service
+        Get-Service FolderSorter | Start-Service
+    }else{
+        Get-Service FolderSorter | Stop-Service | sc.exe delete FolderSorter
+    }
+
+    $service = Get-Service -Name FolderSorter -ErrorAction SilentlyContinue
+    if($null -ne $service){
+        $status.ForeColor = [System.Drawing.Color]::Green
+        $status.Text = "running"
+        $startButton.Text = "Stop"
+    } else{
+        $status.ForeColor = [System.Drawing.Color]::Red
+        $status.Text = "not running"
+        $startButton.Text = "Start"
+    }
 })
 $form.Controls.Add($startButton)
 
 $status.DataBindings.DefaultDataSourceUpdateMode = 0
 $status.Font = New-Object System.Drawing.Font("Microsoft Sans Serif",11.25,0,3,1)
-$status.ForeColor = [System.Drawing.Color]::FromArgb(255,0,192,0)
 
 $System_Drawing_Point = New-Object System.Drawing.Point
 $System_Drawing_Point.X = 80
@@ -78,7 +106,7 @@ $System_Drawing_Size.Height = 23
 $System_Drawing_Size.Width = 100
 $status.Size = $System_Drawing_Size
 $status.TabIndex = 1
-$status.Text = "running"
+
 
 $form.Controls.Add($status)
 

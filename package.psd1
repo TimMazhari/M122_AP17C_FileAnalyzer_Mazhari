@@ -1,5 +1,5 @@
 @{
-    Root = "C:\sources\school\modul122\M122_AP17C_FileAnalyzer_Mazhari\Test.ps1"
+    Root = "C:\sources\school\modul122\M122_AP17C_FileAnalyzer_Mazhari\Hallo.ps1"
     OutputPath = "C:\sources\school\modul122\M122_AP17C_FileAnalyzer_Mazhari\ServiceStuff"
     Package = @{
         Enabled = $true
@@ -13,7 +13,7 @@
         RequireElevation = $false
         ApplicationIconPath = ""
         PackageType = "Service"
-        ServiceName = "PoshServ"
-        ServiceSiplayName = "PowerShell Service"
+        ServiceName = "FolderSorter"
+        ServiceSiplayName = "Folder Sorter"
     }
 }
