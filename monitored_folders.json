@@ -1,6 +1,18 @@
 [
     {
-        "Name":  "Test",
+        "Name":  "H",
+        "Path":  "C:\\Ehre",
+        "Rules":  [
+                      {
+                          "Filetype":  ".bmp",
+                          "Minsize":  0,
+                          "Maxsize":  0,
+                          "Destination":  "C:\\Test1"
+                      }
+                  ]
+    },
+    {
+        "Name":  "HH",
         "Path":  "C:\\Test",
         "Rules":  [
                       {
