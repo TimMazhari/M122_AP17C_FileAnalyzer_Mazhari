@@ -76,10 +76,10 @@ $startButton.add_Click({
         Import-Module $relativePathModule -ArgumentList @($false)
 
 
-        $relativePathConfigFile = Resolve-Path .\package.psd1
+        $relativePathConfigFile = Resolve-Path .\ServiceStuff\Service\package.psd1
         Merge-Script -Verbose -ConfigFile $relativePathConfigFile
         
-        $relativePathExe = Resolve-Path .\ServiceStuff\Hallo.exe
+        $relativePathExe = Resolve-Path .\ServiceStuff\folder_sort_service.exe
         New-Service -Name "FolderSorter" -BinaryPathName $relativePathExe
 
         Get-Service FolderSorter | Start-Service

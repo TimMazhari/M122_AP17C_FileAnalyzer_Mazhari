@@ -1,23 +1,14 @@
 [
     {
-        "Name":  "123",
-        "Path":  "21",
+        "Name":  "Test",
+        "Path":  "C:\\Test",
         "Rules":  [
-
-                  ]
-    },
-    {
-        "Name":  "333",
-        "Path":  "",
-        "Rules":  [
-
-                  ]
-    },
-    {
-        "Name":  "1231",
-        "Path":  "321",
-        "Rules":  [
-
+                      {
+                          "Filetype":  ".txt",
+                          "Minsize":  0,
+                          "Maxsize":  0,
+                          "Destination":  "C:\\Test1"
+                      }
                   ]
     }
 ]
