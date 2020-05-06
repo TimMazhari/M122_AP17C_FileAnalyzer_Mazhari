@@ -1,10 +1,10 @@
 [
     {
-        "Name":  "H",
+        "Name":  "Ehre",
         "Path":  "C:\\Ehre",
         "Rules":  [
                       {
-                          "Filetype":  ".bmp",
+                          "Filetype":  ".rtf",
                           "Minsize":  0,
                           "Maxsize":  0,
                           "Destination":  "C:\\Test1"
@@ -12,13 +12,19 @@
                   ]
     },
     {
-        "Name":  "HH",
+        "Name":  "Test",
         "Path":  "C:\\Test",
         "Rules":  [
                       {
-                          "Filetype":  ".txt",
-                          "Minsize":  0,
-                          "Maxsize":  0,
+                          "Filetype":  ".bmp",
+                          "Minsize":  "1",
+                          "Maxsize":  "1",
+                          "Destination":  "C:\\Test1"
+                      },
+                      {
+                          "Filetype":  ".rtf",
+                          "Minsize":  "0",
+                          "Maxsize":  "0",
                           "Destination":  "C:\\Test1"
                       }
                   ]

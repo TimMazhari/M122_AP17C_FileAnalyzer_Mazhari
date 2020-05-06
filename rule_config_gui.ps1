@@ -8,6 +8,8 @@ function Generate-RuleConfigForm {
         [string] $name,
         [string] $filetype = "",
         [string] $destination = "",
+        [int] $maxsize = 0,
+        [int] $minsize = 0,
         [bool] $isNewEntry = $true
     )
 
@@ -92,7 +94,7 @@ function Generate-RuleConfigForm {
     $System_Drawing_Size.Width = 120
     $maxSizeNumericUpDown.Size = $System_Drawing_Size
     $maxSizeNumericUpDown.TabIndex = 10
-    
+    $maxSizeNumericUpDown.Value = $maxsize
     $ruleConfigForm.Controls.Add($maxSizeNumericUpDown)
     
     $maxSizeLabel.DataBindings.DefaultDataSourceUpdateMode = 0
@@ -123,7 +125,7 @@ function Generate-RuleConfigForm {
     $System_Drawing_Size.Width = 120
     $minSizeNumericUpDown.Size = $System_Drawing_Size
     $minSizeNumericUpDown.TabIndex = 8
-
+    $minSizeNumericUpDown.Value = $minsize
     
     $ruleConfigForm.Controls.Add($minSizeNumericUpDown)
     
@@ -267,7 +269,10 @@ function Generate-RuleConfigForm {
                     foreach($rule in $folder.Rules){
                         if($rule.Filetype -eq $filetype){
                             $isNew = $False
+                            $rule.Filetype = $typeTextBox.Text
                             $rule.Destination = $destinationTextBox.Text
+                            $rule.MinSize = $minSizeNumericUpDown.Text
+                            $rule.MaxSize = $maxSizeNumericUpDown.Text
                         }                    
                     }
                 }

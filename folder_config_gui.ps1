@@ -95,7 +95,19 @@ $ruleDataGridView.Add_CellMouseDoubleClick({
     $ruleDataGridView.SelectedRows | ForEach-Object{
         $filetype = $_.Cells[0].Value
         $destination = $_.Cells[1].Value
-        $monitoredFoldersForm = Generate-RuleConfigForm -Name $name -Filetype $filetype -Destination $destination -IsNewEntry $false
+        $jsonFilePath = $PSScriptRoot + "\monitored_folders.json"
+        [System.Collections.ArrayList] $allFolders = Get-Content $jsonFilePath | ConvertFrom-Json
+
+        foreach($folder in $allFolders){
+            foreach($rule in $folder.Rules){
+                if($rule.Filetype -eq $filetype){
+                    $maxSize = $rule.Maxsize
+                    $minSize = $rule.Minsize
+                }
+            }
+        }
+
+        $monitoredFoldersForm = Generate-RuleConfigForm -Name $name -Filetype $filetype -Destination $destination -Maxsize $maxSize -Minsize $minSize -IsNewEntry $false
         $monitoredFoldersForm.ShowDialog()
  }})
 

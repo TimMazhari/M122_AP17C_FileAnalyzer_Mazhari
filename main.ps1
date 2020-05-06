@@ -5,6 +5,5 @@
 . .\rule_config_gui.ps1
 . .\folder_config_gui.ps1
 
-[System.Windows.Forms.Form] $menuForm = Generate-MenuForm
- 
-$MenuForm.ShowDialog()
+ [System.Windows.Forms.Form] $menuForm = Generate-MenuForm
+  $MenuForm.ShowDialog()

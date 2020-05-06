@@ -1,4 +1,4 @@
-
+. .\taskscheduler.ps1
 function Generate-MenuForm {
 
 
@@ -54,50 +54,35 @@ $System_Drawing_Size.Width = 75
 $startButton.Size = $System_Drawing_Size
 $startButton.TabIndex = 2
 
-$service = Get-Service -Name FolderSorter -ErrorAction SilentlyContinue
-
-if($null -ne $service){
-    $status.ForeColor = [System.Drawing.Color]::Green
+if(Exists-ScheduledTask){
+    $status.ForeColor = [System.Drawing.Color]::Red
     $status.Text = "running"
     $startButton.Text = "Stop"
 
-} else{
+}else{
     $status.ForeColor = [System.Drawing.Color]::Red
     $status.Text = "not running"
     $startButton.Text = "Start"
 }
 
 $startButton.UseVisualStyleBackColor = $True
-
-$startButton.add_Click({
-    if($startButton.Text -eq "Start"){
-
-        $relativePathModule = Resolve-Path ..\..\..\..\Users\$env:UserName\.vscode\extensions\ironmansoftware.powershellprotools-5.10.0\out\PowerShellProTools.VSCode.psd1
-        Import-Module $relativePathModule -ArgumentList @($false)
-
-
-        $relativePathConfigFile = Resolve-Path .\ServiceStuff\Service\package.psd1
-        Merge-Script -Verbose -ConfigFile $relativePathConfigFile
-        
-        $relativePathExe = Resolve-Path .\ServiceStuff\folder_sort_service.exe
-        New-Service -Name "FolderSorter" -BinaryPathName $relativePathExe
-
-        Get-Service FolderSorter | Start-Service
+$startButton.add_Click( {
+    if(Exists-ScheduledTask){
+        Unregister-ScheduledSorter
     }else{
-        Get-Service FolderSorter | Stop-Service | sc.exe delete FolderSorter
+        Create-TaskScheduler
     }
-
-    $service = Get-Service -Name FolderSorter -ErrorAction SilentlyContinue
-    if($null -ne $service){
-        $status.ForeColor = [System.Drawing.Color]::Green
-        $status.Text = "running"
-        $startButton.Text = "Stop"
-    } else{
+    if(Exists-ScheduledTask){
         $status.ForeColor = [System.Drawing.Color]::Red
-        $status.Text = "not running"
+        $startButton.Text = "Stop"
+        $status.Text = "running"
+    }else{
+        $status.ForeColor = [System.Drawing.Color]::Red
         $startButton.Text = "Start"
+        $status.Text = "stopped"
     }
-})
+} )
+
 $form.Controls.Add($startButton)
 
 $status.DataBindings.DefaultDataSourceUpdateMode = 0
