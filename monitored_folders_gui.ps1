@@ -1,7 +1,15 @@
 . .\file_explorer_gui.ps1
-. .\utilities\json_utilities.ps1
+. .\json_utilities.ps1
 . .\config_editor_gui.ps1
-. .\utilities\general_utilities.ps1
+. .\general_utilities.ps1
+<#
+.DESCRIPTION
+   Add, edit or delete folders
+.AUTHOR
+    Mazhari Tim
+#>
+
+
 function Generate-MonitoredFoldersForm {
 
     param(
@@ -70,7 +78,7 @@ function Generate-MonitoredFoldersForm {
         
         foreach ($oldFolder in $jsonFolders){
             IF ($oldFolder.Name -eq $name ) {
-                # if the name already exists we simply adjust the new values
+                #Keep the changes that the user made
                 $isNew = $False
                 $oldFolder.Path = $textPathNameBox.Text
                 $oldFolder.Name = $textNameBox.Text
@@ -79,16 +87,19 @@ function Generate-MonitoredFoldersForm {
         }
         
         if ($isNew) {
+            #if the entry is a new folder, we create a folderobject and add it to allfolders
             $newFolder = Create-JsonFolderObject -name $textNameBox.Text -path $textPathNameBox.Text
             $allFolders.Add($newFolder)
         }
 
+        #Checkduplicates
         $allUniqueFolders = $allFolders  | Select-Object -Property Name -Unique
         $duplicateFolders = Compare-Object -ReferenceObject $allUniqueFolders -DifferenceObject $allFolders
         if($null -ne $duplicateFolders){
             Write-DuplicateError
             Return
         }
+        #Save jsonfile and populate the grid
         Save-AsJson( $allFolders )
         Populate-FolderGrid
         $monitored_folders_form.Close() 
@@ -169,7 +180,7 @@ function Generate-MonitoredFoldersForm {
     $deleteButton.Text = "Delete"
     $deleteButton.UseVisualStyleBackColor = $True
     $deleteButton.add_Click({
-
+        #Remove the folder from json and populate the grid
         [System.Collections.ArrayList] $allFolders = @()
         [System.Collections.ArrayList] $jsonFolders = Convert-FromJson
         
@@ -186,6 +197,7 @@ function Generate-MonitoredFoldersForm {
     
     $monitored_folders_form.Controls.Add($deleteButton)
     if($isNewFolder){
+        #Only show deletebutton if it is not a new entry
         $deleteButton.Visible = $false
     }
     

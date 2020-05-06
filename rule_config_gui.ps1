@@ -1,7 +1,16 @@
-. .\utilities\json_utilities.ps1
+. .\json_utilities.ps1
 . .\file_explorer_gui.ps1
 . .\folder_config_gui.ps1
-. .\utilities\general_utilities.ps1
+. .\general_utilities.ps1
+
+<#
+.DESCRIPTION
+   Add, edit or delete rules for folder
+.AUTHOR
+    Mazhari Tim
+#>
+
+
 function Generate-RuleConfigForm {
 
     param(
@@ -55,6 +64,7 @@ function Generate-RuleConfigForm {
     $deleteButton.UseVisualStyleBackColor = $True
 
     $deleteButton.add_Click({
+        #Loop through the json until we find the right entry and remove it from list
         [System.Collections.ArrayList]$jsonFolders = Convert-FromJson
         [System.Collections.ArrayList]$allFolders = @()
         $script:isNew = $True
@@ -70,7 +80,7 @@ function Generate-RuleConfigForm {
             }
             $allFolders.Add($folder)
         }
-        
+        #Save to json and repopulate the grid
         Save-AsJson( $allFolders )
         Populate-RuleGrid
         $ruleConfigForm.Close()
@@ -80,6 +90,7 @@ function Generate-RuleConfigForm {
     $ruleConfigForm.Controls.Add($deleteButton)
     
     if($isNewEntry){
+        #Hide deletebutton if it is a new entry
         $deleteButton.Visible = $false
     }
     
@@ -95,6 +106,7 @@ function Generate-RuleConfigForm {
     $maxSizeNumericUpDown.Size = $System_Drawing_Size
     $maxSizeNumericUpDown.TabIndex = 10
     $maxSizeNumericUpDown.Value = $maxsize
+    $maxSizeNumericUpDown.Maximum = 100000000
     $ruleConfigForm.Controls.Add($maxSizeNumericUpDown)
     
     $maxSizeLabel.DataBindings.DefaultDataSourceUpdateMode = 0
@@ -126,7 +138,7 @@ function Generate-RuleConfigForm {
     $minSizeNumericUpDown.Size = $System_Drawing_Size
     $minSizeNumericUpDown.TabIndex = 8
     $minSizeNumericUpDown.Value = $minsize
-    
+    $minSizeNumericUpDown.Maximum = 100000000
     $ruleConfigForm.Controls.Add($minSizeNumericUpDown)
     
     $minSizeLabel.DataBindings.DefaultDataSourceUpdateMode = 0
@@ -263,6 +275,7 @@ function Generate-RuleConfigForm {
         [System.Collections.ArrayList]$allFolders = @()
         $script:isNew = $True
 
+        #Loop through json until we find the right folder. Add the entered rules to said folder
         foreach($folder in $jsonFolders){
             if($folder.Name -eq $name){
                 if($folder.Rules.Count -gt 0){
@@ -277,10 +290,11 @@ function Generate-RuleConfigForm {
                     }
                 }
                 if($isNew){
+                    #If it is a new rule, we save it accordingly
                     $rule = Create-FolderTypesObject -fileType $typeTextBox.Text -minsize $minSizeNumericUpDown.Text -maxsize $maxSizeNumericUpDown.Text -destination $destinationTextBox.Text
                     $folder.Rules += $rule
                 }
-
+                #check for duplicates
                 $allUniqueRules = $folder.Rules  | Select-Object -Property Filetype -Unique
                 $duplicateRules = Compare-Object -ReferenceObject $allUniqueRules -DifferenceObject $folder.Rules
                 if($null -ne $duplicateRules){
@@ -292,7 +306,7 @@ function Generate-RuleConfigForm {
             }
             $allFolders.Add($folder)
         }
-        
+        #save json and populate grid
         Save-AsJson( $allFolders )
         Populate-RuleGrid
         $ruleConfigForm.Close()

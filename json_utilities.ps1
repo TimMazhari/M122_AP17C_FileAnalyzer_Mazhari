@@ -1,3 +1,11 @@
+<#
+.DESCRIPTION
+   Multiple json utilities
+.AUTHOR
+    Mazhari Tim
+#>
+
+# Create PSCustomObject containing the folder data that will go into json
 Function Create-JsonFolderObject {
 
     param(
@@ -9,6 +17,7 @@ Function Create-JsonFolderObject {
     Return [PSCustomObject]@{Name = $name; Path = $path; Rules = $rules}
 }
 
+# Create PSCustomObject containing the rule data that will go into json
 Function Create-FolderTypesObject {
 
     param(
@@ -19,13 +28,18 @@ Function Create-FolderTypesObject {
     )
     Return [PSCustomObject]@{Filetype = $fileType; Minsize = $minsize; Maxsize = $maxsize; Destination = $destination}
 }
+
+# save values to json file
 Function Save-AsJson{
     param (
         $json_cobject
     )
-    ConvertTo-Json($json_cobject) -Depth 3 | Set-Content -Path "C:\sources\school\modul122\M122_AP17C_FileAnalyzer_Mazhari\monitored_folders.json"
+    $path = $PSScriptRoot + "\monitored_folders.json"
+    ConvertTo-Json($json_cobject) -Depth 3 | Set-Content -Path $path
 }
 
+# get values from json
 function Convert-FromJson {
-    return Get-Content "C:\sources\school\modul122\M122_AP17C_FileAnalyzer_Mazhari\monitored_folders.json" | ConvertFrom-Json
+    $path = $PSScriptRoot + "\monitored_folders.json"
+    return Get-Content  $path| ConvertFrom-Json
 }

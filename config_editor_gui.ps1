@@ -1,4 +1,10 @@
-. .\utilities\json_utilities.ps1
+. .\json_utilities.ps1
+<#
+.DESCRIPTION
+   Add and display all monitored folders
+.AUTHOR
+    Mazhari Tim
+#>
 
 function Generate-ConfigEditorForm() {
 
@@ -36,6 +42,8 @@ $editButton.Size = $System_Drawing_Size
 $editButton.TabIndex = 4
 $editButton.Text = "Edit"
 $editButton.UseVisualStyleBackColor = $True
+
+#give the values of the selected row as parameters so that these values will already be filled in on edit.
 $editButton.add_Click({ 
                         $folderDataGridView.SelectedRows | ForEach-Object{
                             $name = $_.Cells[0].Value
@@ -136,6 +144,7 @@ $folderDataGridView.TabIndex = 0
 
 Populate-FolderGrid
 
+#Open folderConfigForm with name of selected folder as parameter
 $folderDataGridView.Add_CellMouseDoubleClick({ 
     $folderDataGridView.SelectedRows | ForEach-Object{
         
@@ -154,6 +163,7 @@ return $config_editor_form
 
 }
 
+#Function to fill in the values of json into datagrid
 function Populate-FolderGrid{
     $folderDataGridView.Rows.Clear()
     [System.Collections.ArrayList] $jsonFolders = Convert-FromJson

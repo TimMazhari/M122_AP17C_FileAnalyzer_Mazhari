@@ -17,8 +17,8 @@
         "Rules":  [
                       {
                           "Filetype":  ".bmp",
-                          "Minsize":  "1",
-                          "Maxsize":  "1",
+                          "Minsize":  "0",
+                          "Maxsize":  "0",
                           "Destination":  "C:\\Test1"
                       },
                       {

@@ -1,4 +1,12 @@
 . .\taskscheduler.ps1
+<#
+.DESCRIPTION
+   Menu gui. From here we can start the task or edit the config file
+.AUTHOR
+    Mazhari Tim
+#>
+
+
 function Generate-MenuForm {
 
 
@@ -54,12 +62,14 @@ $System_Drawing_Size.Width = 75
 $startButton.Size = $System_Drawing_Size
 $startButton.TabIndex = 2
 
+#If the Task already exists, we change the label and button accordingly 
 if(Exists-ScheduledTask){
-    $status.ForeColor = [System.Drawing.Color]::Red
+    $status.ForeColor = [System.Drawing.Color]::Green
     $status.Text = "running"
     $startButton.Text = "Stop"
 
 }else{
+    #Otherwise we obviously change it aswell
     $status.ForeColor = [System.Drawing.Color]::Red
     $status.Text = "not running"
     $startButton.Text = "Start"
@@ -67,13 +77,15 @@ if(Exists-ScheduledTask){
 
 $startButton.UseVisualStyleBackColor = $True
 $startButton.add_Click( {
+    #If the task exists, we remove it and change the label and button
     if(Exists-ScheduledTask){
         Unregister-ScheduledSorter
     }else{
+        #Otherwise we create a task and change the button and label
         Create-TaskScheduler
     }
     if(Exists-ScheduledTask){
-        $status.ForeColor = [System.Drawing.Color]::Red
+        $status.ForeColor = [System.Drawing.Color]::Green
         $startButton.Text = "Stop"
         $status.Text = "running"
     }else{

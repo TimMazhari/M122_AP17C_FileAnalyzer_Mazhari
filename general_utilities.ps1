@@ -1,3 +1,11 @@
+<#
+.DESCRIPTION
+   Error that pops up when there are duplicates
+.AUTHOR
+    Mazhari Tim
+#>
+
+
 function Write-DuplicateError {
         Add-Type -AssemblyName PresentationCore,PresentationFramework
         $ButtonType = [System.Windows.MessageBoxButton]::Ok

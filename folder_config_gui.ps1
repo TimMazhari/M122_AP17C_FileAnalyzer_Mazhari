@@ -1,5 +1,11 @@
-. .\utilities\json_utilities.ps1
+. .\json_utilities.ps1
 . .\config_editor_gui.ps1
+<#
+.DESCRIPTION
+   All rules of a certain folder
+.AUTHOR
+    Mazhari Tim
+#>
 
 function Generate-FolderConfigForm {
 
@@ -91,22 +97,26 @@ $ruleDataGridView.TabIndex = 1
 
 Populate-RuleGrid
 
+
 $ruleDataGridView.Add_CellMouseDoubleClick({ 
     $ruleDataGridView.SelectedRows | ForEach-Object{
+        #get values to pass as parameters
         $filetype = $_.Cells[0].Value
         $destination = $_.Cells[1].Value
-        $jsonFilePath = $PSScriptRoot + "\monitored_folders.json"
+        $path = $PSScriptRoot + "\monitored_folders.json"
+        $jsonFilePath = $path
         [System.Collections.ArrayList] $allFolders = Get-Content $jsonFilePath | ConvertFrom-Json
 
         foreach($folder in $allFolders){
             foreach($rule in $folder.Rules){
                 if($rule.Filetype -eq $filetype){
+                    #get min and maxsize to pass as parameters
                     $maxSize = $rule.Maxsize
                     $minSize = $rule.Minsize
                 }
             }
         }
-
+        #Open RuleConfigForm with parameters so the values will already be filled 
         $monitoredFoldersForm = Generate-RuleConfigForm -Name $name -Filetype $filetype -Destination $destination -Maxsize $maxSize -Minsize $minSize -IsNewEntry $false
         $monitoredFoldersForm.ShowDialog()
  }})
@@ -136,6 +146,7 @@ return $folderConfigForm
 
 }
 
+# Function to fill DataGridView with data from json
 function Populate-RuleGrid{
     $ruleDataGridView.Rows.Clear()
     [System.Collections.ArrayList] $jsonFolders = Convert-FromJson

@@ -1,3 +1,12 @@
+<#
+.DESCRIPTION
+    Fileexplorer gui
+.AUTHOR
+    Mazhari Tim
+#>
+
+
+#function to open a file selector
 Function Select-FolderDialog
 {
     param([string]$Description="Select Folder",[string]$RootFolder="Desktop")
@@ -9,12 +18,9 @@ Function Select-FolderDialog
         $objForm.Rootfolder = $RootFolder
         $objForm.Description = $Description
         $Show = $objForm.ShowDialog()
-        If ($Show -eq "OK")
-        {   
+        If ($Show -eq "OK"){   
             Return $objForm.SelectedPath
-        }
-        Else
-        {
-            Write-Error "Operation cancelled by user."
+        }Else{
+            Return ""
         }
 }
