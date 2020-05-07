@@ -1,31 +1,13 @@
 [
     {
-        "Name":  "Ehre",
-        "Path":  "C:\\Ehre",
-        "Rules":  [
-                      {
-                          "Filetype":  ".rtf",
-                          "Minsize":  0,
-                          "Maxsize":  0,
-                          "Destination":  "C:\\Test1"
-                      }
-                  ]
-    },
-    {
-        "Name":  "Test",
+        "Name":  "Folder One",
         "Path":  "C:\\Test",
         "Rules":  [
                       {
-                          "Filetype":  ".bmp",
-                          "Minsize":  "0",
-                          "Maxsize":  "0",
-                          "Destination":  "C:\\Test1"
-                      },
-                      {
-                          "Filetype":  ".rtf",
-                          "Minsize":  "0",
-                          "Maxsize":  "0",
-                          "Destination":  "C:\\Test1"
+                          "Filetype":  ".pdf",
+                          "Minsize":  0,
+                          "Maxsize":  0,
+                          "Destination":  "C:\\sources"
                       }
                   ]
     }

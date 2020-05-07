@@ -14,7 +14,6 @@ function Generate-ConfigEditorForm() {
 $config_editor_form = New-Object System.Windows.Forms.Form
 $editButton = New-Object System.Windows.Forms.Button
 $AddFolderButton = New-Object System.Windows.Forms.Button
-$globalRulesButton = New-Object System.Windows.Forms.Button
 $title = New-Object System.Windows.Forms.Label
 $script:folderDataGridView = New-Object System.Windows.Forms.DataGridView
 
@@ -77,26 +76,6 @@ $AddFolderButton.add_Click( {
 
 $config_editor_form.Controls.Add($AddFolderButton)
 
-$globalRulesButton.DataBindings.DefaultDataSourceUpdateMode = 0
-$globalRulesButton.Font = New-Object System.Drawing.Font("Microsoft Sans Serif",9.75,0,3,1)
-
-$System_Drawing_Point = New-Object System.Drawing.Point
-$System_Drawing_Point.X = 421
-$System_Drawing_Point.Y = 12
-$globalRulesButton.Location = $System_Drawing_Point
-$globalRulesButton.Name = "globalRulesButton"
-$System_Drawing_Size = New-Object System.Drawing.Size
-$System_Drawing_Size.Height = 23
-$System_Drawing_Size.Width = 95
-$globalRulesButton.Size = $System_Drawing_Size
-$globalRulesButton.TabIndex = 2
-$globalRulesButton.Text = "Global rules"
-$globalRulesButton.UseVisualStyleBackColor = $True
-$globalRulesButton.add_Click( { 
-    $globalRulesForm = Generate-GlobalRulesForm
-    $globalRulesForm.ShowDialog() } )
-
-$config_editor_form.Controls.Add($globalRulesButton)
 
 $title.DataBindings.DefaultDataSourceUpdateMode = 0
 $title.Font = New-Object System.Drawing.Font("Microsoft Sans Serif",12,0,3,1)
